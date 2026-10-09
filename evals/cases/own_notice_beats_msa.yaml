@@ -1,0 +1,11 @@
+name: a Schedule-1 rate notice beats the MSA table for the pickup window
+mailbox: evals/mailboxes/usd_notice
+as_of: '2030-08-31'
+mode: supervised
+expect:
+  key: {invoice_id: NFR-10023, class: overcharge}
+  verdict: finding
+  amount_usd: '124.95'
+  action: draft:dispute
+why: the notice sets 6.10 USD/kg for pickups 2030-06-01..2030-12-31; pickup 2030-07-15 falls
+  inside it, so the dispute is 105.00 freight plus 19.95 fuel = 124.95, not the MSA-based 74.97.

@@ -11,30 +11,52 @@
 - feedback: take in a person's decisions on what you escalated (feedback.json) and let them change later reports.
 
 The environment gives ANTHROPIC_API_KEY and ANTHROPIC_BASE_URL. Keep the argument names as they are: grader/validate.py
-checks them. Replace the NotImplementedError bodies with your code.
+checks them.
 """
 from __future__ import annotations
 
 import argparse
 import sys
+from pathlib import Path
+
+# Allow running as `python harness/harness.py` (grader does this from the repo root).
+if __package__ in (None, ""):
+    sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
+    from harness import state, understand
+    from harness import analyze as A
+    from harness import feedback as F
+else:
+    from . import state, understand
+    from . import analyze as A
+    from . import feedback as F
 
 DEFAULT_STATE = ".state"
 
 
 def ingest(batch_dir: str, state_dir: str) -> None:
-    raise NotImplementedError(
-        f"ingest is not written yet: read the .eml files in {batch_dir} and keep what you learn under {state_dir}")
+    from pathlib import Path as _P
+    # Idempotence: the grader re-copies batches we've already seen; re-reading is safe (index
+    # skips known doc_ids) but costs LLM calls, so skip whole batches we've completed.
+    batch_name = _P(batch_dir).name
+    if batch_name in state.seen_batches(state_dir):
+        return
+    understand.ingest_batch(batch_dir, state_dir)
+    state.mark_batch_seen(state_dir, batch_name)
 
 
 def report(as_of: str, mode: str, state_dir: str) -> dict:
-    raise NotImplementedError(
-        f"report is not written yet: return the report.json dict for --as-of {as_of} in {mode} mode "
-        "(see grader/schema/report.schema.json and data/examples/*/expected_finding.json)")
+    docs = state.load_all_docs(state_dir, as_of=as_of)
+    facts = state.load_facts(state_dir)
+    closed = state.load_closed_keys(state_dir)
+    learned = state.load_learned(state_dir)
+    return A.build_report(docs, as_of=as_of, mode=mode, facts=facts,
+                          closed_keys=closed, learned=learned)
 
 
 def feedback(feedback_file: str, state_dir: str) -> None:
-    raise NotImplementedError(
-        f"feedback is not written yet: store the decisions in {feedback_file} under {state_dir} so later reports use them")
+    import json as _json
+    data = _json.loads(Path(feedback_file).read_text(encoding="utf-8"))
+    F.apply_feedback(data, state_dir)
 
 
 def main(argv=None) -> int:
@@ -63,6 +85,9 @@ def main(argv=None) -> int:
     except NotImplementedError as e:
         print(f"harness.py {a.cmd}: {e}", file=sys.stderr)
         return 3
+    except Exception as e:  # noqa: BLE001 - report a clean error, never a traceback to stdout
+        print(f"harness.py {a.cmd}: {type(e).__name__}: {e}", file=sys.stderr)
+        return 1
     return 0
 
 

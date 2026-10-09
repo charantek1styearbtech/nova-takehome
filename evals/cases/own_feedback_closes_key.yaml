@@ -1,0 +1,10 @@
+name: feedback that should change an answer - AP closed exactly this dispute
+mailbox: evals/mailboxes/usd_advice
+as_of: '2030-08-31'
+mode: supervised
+feedback: {batch_01: evals/feedback/close_nfr10023.json}
+expect:
+  key: {invoice_id: NFR-10023, class: overcharge}
+  verdict: no_finding
+why: the AP manager closed dispute overcharge:NFR-10023 after batch_01; the later report must
+  stop raising that key even though the invoice still overcharges on its face.

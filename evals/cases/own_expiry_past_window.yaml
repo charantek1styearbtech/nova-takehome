@@ -1,0 +1,9 @@
+name: one day outside the expiry window - no alert at 61 days
+mailbox: data/examples/expiry/docs
+as_of: '2034-01-18'
+mode: supervised
+expect:
+  key: {contract_id: TBX-US-EXP-E24, class: expiry}
+  verdict: no_finding
+why: the contract ends 2034-03-20; as_of is 61 days earlier, just outside the 0..60 window,
+  so the expiry key must stay out of the report.

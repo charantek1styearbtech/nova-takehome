@@ -1,0 +1,39 @@
+{
+ "schema_version": "1.0",
+ "world": "eval",
+ "after_batch": "batch_01",
+ "decided_at": "2030-08-05T09:30:00Z",
+ "decided_by": {
+  "name": "Odette Quill",
+  "role": "AP Manager",
+  "entity": "QMD-US"
+ },
+ "items": [
+  {
+   "item_id": "fb-usd-02",
+   "finding_key": {
+    "invoice_id": "NFR-88420",
+    "class": "overcharge"
+   },
+   "solicited": true,
+   "decision": "close",
+   "fact": {
+    "type": "dispute_closed",
+    "subject": {
+     "invoice_id": "NFR-88420",
+     "class": "overcharge"
+    },
+    "value": {
+     "outcome": "settled"
+    },
+    "evidence": "A different charges advice (NFR-88420) was settled with the carrier last week."
+   },
+   "scope": {
+    "kind": "one_off",
+    "applies_to": {
+     "invoice_id": "NFR-88420"
+    }
+   }
+  }
+ ]
+}

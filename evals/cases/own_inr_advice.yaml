@@ -1,0 +1,11 @@
+name: INR charges advice in a DD/MM layout, repriced and converted to USD
+mailbox: evals/mailboxes/inr_advice
+as_of: '2030-08-31'
+mode: supervised
+expect:
+  key: {invoice_id: VRA-7741, class: overcharge}
+  verdict: finding
+  amount_usd: '62.47'
+  action: draft:dispute
+why: freight billed 360.00 vs P1 rate 330.00 INR/kg on 150 kg; the fuel line follows the
+  correct freight base; INR 5,310.00 total divided by the Annex F July rate 85.00 = USD 62.47.

@@ -1,0 +1,2696 @@
+{
+ "schema_version": "1.0",
+ "as_of": "2031-02-28",
+ "mode": "supervised",
+ "findings": [
+  {
+   "id": "overcharge:CDI-2930-0148",
+   "class": "overcharge",
+   "verdict": "no_finding",
+   "action": "none",
+   "confidence": 0.9,
+   "evidence": [
+    {
+     "doc": "batch_01/0002.eml#CDI-2930-0148.pdf",
+     "page": 1,
+     "quote": "INW1-USC1 CA98924245 Air freight 106 kg 357.13 37,855.78 22/02/2030"
+    },
+    {
+     "doc": "batch_01/0001.eml#MSA-CDA-IN-EXP-E91.pdf",
+     "page": 8,
+     "quote": "INW1-USC1 100-299.5 kg 357.13 340.85"
+    },
+    {
+     "doc": "batch_01/0001.eml#MSA-CDA-IN-EXP-E91.pdf",
+     "page": 3,
+     "quote": "3.2 Pricing date. Each shipment is priced at the rates, surcharges and fees in force on its Pickup Date."
+    },
+    {
+     "doc": "batch_01/0016.eml#tracking-2030-01-01.xlsx",
+     "page": 1,
+     "quote": "CA98924245 | PICKED_UP | 2030-02-22 | INW1 | -"
+    },
+    {
+     "doc": "batch_01/0002.eml#CDI-2930-0148.pdf",
+     "page": 1,
+     "quote": "INW1-USC1 CA98924245 Fuel surcharge 37,855.78 16.67% 6,310.56 22/02/2030"
+    },
+    {
+     "doc": "batch_01/0001.eml#MSA-CDA-IN-EXP-E91.pdf",
+     "page": 3,
+     "quote": "4 Surcharges 4.1 Fuel surcharge. Fuel surcharge is the Annex C percentage for the month of the Pickup Date, applied to the base freight charge only."
+    },
+    {
+     "doc": "batch_01/0002.eml#CDI-2930-0148.pdf",
+     "page": 1,
+     "quote": "INW1-USC1 CA98924245 Security surcharge 106 kg 17.93 1,900.58 22/02/2030"
+    },
+    {
+     "doc": "batch_01/0001.eml#MSA-CDA-IN-EXP-E91.pdf",
+     "page": 10,
+     "quote": "SEC Security surcharge 17.93 INR per chargeable kg"
+    },
+    {
+     "doc": "batch_01/0002.eml#CDI-2930-0148.pdf",
+     "page": 1,
+     "quote": "INW1-USC1 CA98924245 Delivery fee 1 shpt 8644.00 8,644.00 22/02/2030"
+    },
+    {
+     "doc": "batch_01/0001.eml#MSA-CDA-IN-EXP-E91.pdf",
+     "page": 10,
+     "quote": "DLV Delivery fee 8644.00 INR per shipment"
+    }
+   ],
+   "amount_usd": null,
+   "amount_range": null,
+   "deadline": null,
+   "missing_doc": null,
+   "supersedes": [],
+   "learned_at": null,
+   "invoice_id": "CDI-2930-0148"
+  },
+  {
+   "id": "overcharge:CDU-3051254",
+   "class": "overcharge",
+   "verdict": "no_finding",
+   "action": "none",
+   "confidence": 0.9,
+   "evidence": [
+    {
+     "doc": "batch_01/0005.eml#CDU-3051254.pdf",
+     "page": 1,
+     "quote": "USE2-INS2 CA51959332 Air freight 299 kg 5.69 1,701.31 19/05/2030"
+    },
+    {
+     "doc": "batch_01/0003.eml#MSA-CDA-US-EXP-E91.pdf",
+     "page": 8,
+     "quote": "USE2-INS2 100-299.5 kg 5.69 6.06"
+    },
+    {
+     "doc": "batch_01/0003.eml#MSA-CDA-US-EXP-E91.pdf",
+     "page": 3,
+     "quote": "3.2 Pricing date. Each shipment is priced at the rates, surcharges and fees in force on its Pickup Date."
+    },
+    {
+     "doc": "batch_01/0016.eml#tracking-2030-01-01.xlsx",
+     "page": 1,
+     "quote": "CA51959332 | PICKED_UP | 2030-05-19 | USE2 | -"
+    },
+    {
+     "doc": "batch_01/0005.eml#CDU-3051254.pdf",
+     "page": 1,
+     "quote": "USE2-INS2 CA51959332 Fuel surcharge 1,701.31 23.23% 395.21 19/05/2030"
+    },
+    {
+     "doc": "batch_01/0003.eml#MSA-CDA-US-EXP-E91.pdf",
+     "page": 3,
+     "quote": "4 Surcharges 4.1 Fuel surcharge. Fuel surcharge is the Annex C percentage for the month of the Pickup Date, applied to the base freight charge only."
+    },
+    {
+     "doc": "batch_01/0005.eml#CDU-3051254.pdf",
+     "page": 1,
+     "quote": "USE2-INS2 CA51959332 Security surcharge 299 kg 0.16 47.84 19/05/2030"
+    },
+    {
+     "doc": "batch_01/0003.eml#MSA-CDA-US-EXP-E91.pdf",
+     "page": 10,
+     "quote": "SEC Security surcharge 0.16 USD per chargeable kg"
+    },
+    {
+     "doc": "batch_01/0005.eml#CDU-3051254.pdf",
+     "page": 1,
+     "quote": "USE2-INS2 CA51959332 Storage 5 days 59.33 296.65 19/05/2030"
+    },
+    {
+     "doc": "batch_01/0003.eml#MSA-CDA-US-EXP-E91.pdf",
+     "page": 10,
+     "quote": "STOR Storage 59.33 USD per storage day"
+    },
+    {
+     "doc": "batch_01/0005.eml#CDU-3051254.pdf",
+     "page": 1,
+     "quote": "USE2-INS2 CA51959332 Delivery fee 1 shpt 52.70 52.70 19/05/2030"
+    },
+    {
+     "doc": "batch_01/0003.eml#MSA-CDA-US-EXP-E91.pdf",
+     "page": 10,
+     "quote": "DLV Delivery fee 52.70 USD per shipment"
+    }
+   ],
+   "amount_usd": null,
+   "amount_range": null,
+   "deadline": null,
+   "missing_doc": null,
+   "supersedes": [],
+   "learned_at": null,
+   "invoice_id": "CDU-3051254"
+  },
+  {
+   "id": "overcharge:CDU-3051259",
+   "class": "overcharge",
+   "verdict": "no_finding",
+   "action": "none",
+   "confidence": 0.9,
+   "evidence": [
+    {
+     "doc": "batch_01/0008.eml#CDU-3051259.pdf",
+     "page": 1,
+     "quote": "USE2-INS2 CA10343321 Air freight 154 kg 5.69 876.26 07/06/2030"
+    },
+    {
+     "doc": "batch_01/0003.eml#MSA-CDA-US-EXP-E91.pdf",
+     "page": 8,
+     "quote": "USE2-INS2 100-299.5 kg 5.69 6.06"
+    },
+    {
+     "doc": "batch_01/0003.eml#MSA-CDA-US-EXP-E91.pdf",
+     "page": 3,
+     "quote": "3.2 Pricing date. Each shipment is priced at the rates, surcharges and fees in force on its Pickup Date."
+    },
+    {
+     "doc": "batch_01/0016.eml#tracking-2030-01-01.xlsx",
+     "page": 1,
+     "quote": "CA10343321 | PICKED_UP | 2030-06-07 | USE2 | -"
+    },
+    {
+     "doc": "batch_01/0008.eml#CDU-3051259.pdf",
+     "page": 1,
+     "quote": "USE2-INS2 CA10343321 Fuel surcharge 876.26 20.74% 181.74 07/06/2030"
+    },
+    {
+     "doc": "batch_01/0003.eml#MSA-CDA-US-EXP-E91.pdf",
+     "page": 3,
+     "quote": "4 Surcharges 4.1 Fuel surcharge. Fuel surcharge is the Annex C percentage for the month of the Pickup Date, applied to the base freight charge only."
+    },
+    {
+     "doc": "batch_01/0008.eml#CDU-3051259.pdf",
+     "page": 1,
+     "quote": "USE2-INS2 CA10343321 Security surcharge 154 kg 0.16 24.64 07/06/2030"
+    },
+    {
+     "doc": "batch_01/0003.eml#MSA-CDA-US-EXP-E91.pdf",
+     "page": 10,
+     "quote": "SEC Security surcharge 0.16 USD per chargeable kg"
+    },
+    {
+     "doc": "batch_01/0008.eml#CDU-3051259.pdf",
+     "page": 1,
+     "quote": "USE2-INS2 CA10343321 Delivery fee 1 shpt 52.70 52.70 07/06/2030"
+    },
+    {
+     "doc": "batch_01/0003.eml#MSA-CDA-US-EXP-E91.pdf",
+     "page": 10,
+     "quote": "DLV Delivery fee 52.70 USD per shipment"
+    }
+   ],
+   "amount_usd": null,
+   "amount_range": null,
+   "deadline": null,
+   "missing_doc": null,
+   "supersedes": [],
+   "learned_at": null,
+   "invoice_id": "CDU-3051259"
+  },
+  {
+   "id": "waived_but_billed:CDU-3051259",
+   "class": "waived_but_billed",
+   "verdict": "finding",
+   "action": "draft:dispute",
+   "confidence": 0.85,
+   "evidence": [
+    {
+     "doc": "batch_01/0007.eml",
+     "page": 1,
+     "quote": "Please treat the Delivery fee on AWB CA10343321 as waived."
+    },
+    {
+     "doc": "batch_01/0008.eml#CDU-3051259.pdf",
+     "page": 1,
+     "quote": "USE2-INS2 CA10343321 Delivery fee 1 shpt 52.70 52.70 07/06/2030"
+    },
+    {
+     "doc": "batch_01/0001.eml#MSA-CDA-IN-EXP-E91.pdf",
+     "page": 3,
+     "quote": "3.2 Pricing date. Each shipment is priced at the rates, surcharges and fees in force on its Pickup Date."
+    }
+   ],
+   "amount_usd": "52.70",
+   "amount_range": null,
+   "deadline": null,
+   "missing_doc": null,
+   "supersedes": [],
+   "learned_at": null,
+   "invoice_id": "CDU-3051259"
+  },
+  {
+   "id": "overcharge:CDU-3051262",
+   "class": "overcharge",
+   "verdict": "no_finding",
+   "action": "none",
+   "confidence": 0.9,
+   "evidence": [
+    {
+     "doc": "batch_01/0009.eml#CDU-3051262.pdf",
+     "page": 1,
+     "quote": "USC3-USE2 CA11387867 Air freight 127 kg 8.97 1,139.19 06/06/2030"
+    },
+    {
+     "doc": "batch_01/0003.eml#MSA-CDA-US-EXP-E91.pdf",
+     "page": 8,
+     "quote": "USC3-USE2 100-299.5 kg 8.97 9.56"
+    },
+    {
+     "doc": "batch_01/0003.eml#MSA-CDA-US-EXP-E91.pdf",
+     "page": 3,
+     "quote": "3.2 Pricing date. Each shipment is priced at the rates, surcharges and fees in force on its Pickup Date."
+    },
+    {
+     "doc": "batch_01/0016.eml#tracking-2030-01-01.xlsx",
+     "page": 1,
+     "quote": "CA11387867 | PICKED_UP | 2030-06-06 | USC3 | -"
+    },
+    {
+     "doc": "batch_01/0009.eml#CDU-3051262.pdf",
+     "page": 1,
+     "quote": "USC3-USE2 CA11387867 Fuel surcharge 1,139.19 20.74% 236.27 06/06/2030"
+    },
+    {
+     "doc": "batch_01/0003.eml#MSA-CDA-US-EXP-E91.pdf",
+     "page": 3,
+     "quote": "4 Surcharges 4.1 Fuel surcharge. Fuel surcharge is the Annex C percentage for the month of the Pickup Date, applied to the base freight charge only."
+    },
+    {
+     "doc": "batch_01/0009.eml#CDU-3051262.pdf",
+     "page": 1,
+     "quote": "USC3-USE2 CA11387867 Security surcharge 127 kg 0.16 20.32 06/06/2030"
+    },
+    {
+     "doc": "batch_01/0003.eml#MSA-CDA-US-EXP-E91.pdf",
+     "page": 10,
+     "quote": "SEC Security surcharge 0.16 USD per chargeable kg"
+    },
+    {
+     "doc": "batch_01/0009.eml#CDU-3051262.pdf",
+     "page": 1,
+     "quote": "USC3-USE2 CA11387867 Delivery fee 1 shpt 52.70 52.70 06/06/2030"
+    },
+    {
+     "doc": "batch_01/0003.eml#MSA-CDA-US-EXP-E91.pdf",
+     "page": 10,
+     "quote": "DLV Delivery fee 52.70 USD per shipment"
+    }
+   ],
+   "amount_usd": null,
+   "amount_range": null,
+   "deadline": null,
+   "missing_doc": null,
+   "supersedes": [],
+   "learned_at": null,
+   "invoice_id": "CDU-3051262"
+  },
+  {
+   "id": "overcharge:CDU-3051266",
+   "class": "overcharge",
+   "verdict": "finding",
+   "action": "draft:dispute",
+   "confidence": 0.9,
+   "evidence": [
+    {
+     "doc": "batch_01/0010.eml#CDU-3051266.pdf",
+     "page": 1,
+     "quote": "USC1-INW1 CA53442004 Air freight 547 kg 7.16 3,916.52 19/06/2030"
+    },
+    {
+     "doc": "batch_01/0003.eml#MSA-CDA-US-EXP-E91.pdf",
+     "page": 8,
+     "quote": "USC1-INW1 300+ kg 6.79 7.24"
+    },
+    {
+     "doc": "batch_01/0003.eml#MSA-CDA-US-EXP-E91.pdf",
+     "page": 3,
+     "quote": "3.2 Pricing date. Each shipment is priced at the rates, surcharges and fees in force on its Pickup Date."
+    },
+    {
+     "doc": "batch_01/0016.eml#tracking-2030-01-01.xlsx",
+     "page": 1,
+     "quote": "CA53442004 | PICKED_UP | 2030-06-19 | USC1 | -"
+    },
+    {
+     "doc": "batch_01/0010.eml#CDU-3051266.pdf",
+     "page": 1,
+     "quote": "USC1-INW1 CA53442004 Fuel surcharge 3,916.52 20.74% 812.29 19/06/2030"
+    },
+    {
+     "doc": "batch_01/0003.eml#MSA-CDA-US-EXP-E91.pdf",
+     "page": 3,
+     "quote": "4 Surcharges 4.1 Fuel surcharge. Fuel surcharge is the Annex C percentage for the month of the Pickup Date, applied to the base freight charge only."
+    },
+    {
+     "doc": "batch_01/0010.eml#CDU-3051266.pdf",
+     "page": 1,
+     "quote": "USC1-INW1 CA53442004 Security surcharge 547 kg 0.16 87.52 19/06/2030"
+    },
+    {
+     "doc": "batch_01/0003.eml#MSA-CDA-US-EXP-E91.pdf",
+     "page": 10,
+     "quote": "SEC Security surcharge 0.16 USD per chargeable kg"
+    },
+    {
+     "doc": "batch_01/0010.eml#CDU-3051266.pdf",
+     "page": 1,
+     "quote": "USC1-INW1 CA53442004 Delivery fee 1 shpt 52.70 52.70 19/06/2030"
+    },
+    {
+     "doc": "batch_01/0003.eml#MSA-CDA-US-EXP-E91.pdf",
+     "page": 10,
+     "quote": "DLV Delivery fee 52.70 USD per shipment"
+    }
+   ],
+   "amount_usd": "244.37",
+   "amount_range": null,
+   "deadline": null,
+   "missing_doc": null,
+   "supersedes": [],
+   "learned_at": null,
+   "invoice_id": "CDU-3051266"
+  },
+  {
+   "id": "overcharge:CDU-3051268",
+   "class": "overcharge",
+   "verdict": "no_finding",
+   "action": "none",
+   "confidence": 0.9,
+   "evidence": [
+    {
+     "doc": "batch_01/0012.eml#CDU-3051268.pdf",
+     "page": 1,
+     "quote": "USE2-INW1 CA14806242 Air freight 627 kg 4.56 2,859.12 14/07/2030"
+    },
+    {
+     "doc": "batch_01/0003.eml#MSA-CDA-US-EXP-E91.pdf",
+     "page": 8,
+     "quote": "USE2-INW1 300+ kg 4.56 4.86"
+    },
+    {
+     "doc": "batch_01/0003.eml#MSA-CDA-US-EXP-E91.pdf",
+     "page": 3,
+     "quote": "3.2 Pricing date. Each shipment is priced at the rates, surcharges and fees in force on its Pickup Date."
+    },
+    {
+     "doc": "batch_01/0016.eml#tracking-2030-01-01.xlsx",
+     "page": 1,
+     "quote": "CA14806242 | PICKED_UP | 2030-07-14 | USE2 | -"
+    },
+    {
+     "doc": "batch_01/0012.eml#CDU-3051268.pdf",
+     "page": 1,
+     "quote": "USE2-INS2 CA83642964 Air freight 841 kg 5.09 4,280.69 17/07/2030"
+    },
+    {
+     "doc": "batch_01/0003.eml#MSA-CDA-US-EXP-E91.pdf",
+     "page": 8,
+     "quote": "USE2-INS2 300+ kg 5.09 5.42"
+    },
+    {
+     "doc": "batch_01/0016.eml#tracking-2030-01-01.xlsx",
+     "page": 1,
+     "quote": "CA83642964 | PICKED_UP | 2030-07-17 | USE2 | -"
+    },
+    {
+     "doc": "batch_01/0012.eml#CDU-3051268.pdf",
+     "page": 1,
+     "quote": "USC1-INW1 CA93971959 Air freight 771 kg 6.79 5,235.09 17/07/2030"
+    },
+    {
+     "doc": "batch_01/0003.eml#MSA-CDA-US-EXP-E91.pdf",
+     "page": 8,
+     "quote": "USC1-INW1 300+ kg 6.79 7.24"
+    },
+    {
+     "doc": "batch_01/0016.eml#tracking-2030-01-01.xlsx",
+     "page": 1,
+     "quote": "CA93971959 | PICKED_UP | 2030-07-17 | USC1 | -"
+    },
+    {
+     "doc": "batch_01/0012.eml#CDU-3051268.pdf",
+     "page": 1,
+     "quote": "USC1-INW1 CA10649631 Air freight 736 kg 6.79 4,997.44 15/07/2030"
+    },
+    {
+     "doc": "batch_01/0016.eml#tracking-2030-01-01.xlsx",
+     "page": 1,
+     "quote": "CA10649631 | PICKED_UP | 2030-07-15 | USC1 | -"
+    },
+    {
+     "doc": "batch_01/0012.eml#CDU-3051268.pdf",
+     "page": 1,
+     "quote": "USE2-INS2 CA72032781 Air freight 765 kg 5.09 3,893.85 13/07/2030"
+    },
+    {
+     "doc": "batch_01/0016.eml#tracking-2030-01-01.xlsx",
+     "page": 1,
+     "quote": "CA72032781 | PICKED_UP | 2030-07-13 | USE2 | -"
+    },
+    {
+     "doc": "batch_01/0012.eml#CDU-3051268.pdf",
+     "page": 1,
+     "quote": "USE2-INW1 CA66250624 Air freight 742 kg 4.56 3,383.52 13/07/2030"
+    },
+    {
+     "doc": "batch_01/0016.eml#tracking-2030-01-01.xlsx",
+     "page": 1,
+     "quote": "CA66250624 | PICKED_UP | 2030-07-13 | USE2 | -"
+    },
+    {
+     "doc": "batch_01/0012.eml#CDU-3051268.pdf",
+     "page": 1,
+     "quote": "USC3-USE2 CA59166758 Air freight 798 kg 8.60 6,862.80 17/07/2030"
+    },
+    {
+     "doc": "batch_01/0003.eml#MSA-CDA-US-EXP-E91.pdf",
+     "page": 8,
+     "quote": "USC3-USE2 300+ kg 8.60 9.17"
+    },
+    {
+     "doc": "batch_01/0016.eml#tracking-2030-01-01.xlsx",
+     "page": 1,
+     "quote": "CA59166758 | PICKED_UP | 2030-07-17 | USC3 | -"
+    },
+    {
+     "doc": "batch_01/0012.eml#CDU-3051268.pdf",
+     "page": 1,
+     "quote": "USE2-INW1 CA73521697 Air freight 727 kg 4.56 3,315.12 14/07/2030"
+    },
+    {
+     "doc": "batch_01/0016.eml#tracking-2030-01-01.xlsx",
+     "page": 1,
+     "quote": "CA73521697 | PICKED_UP | 2030-07-14 | USE2 | -"
+    },
+    {
+     "doc": "batch_01/0012.eml#CDU-3051268.pdf",
+     "page": 1,
+     "quote": "USC1-INW1 CA40312499 Air freight 728 kg 6.79 4,943.12 16/07/2030"
+    },
+    {
+     "doc": "batch_01/0016.eml#tracking-2030-01-01.xlsx",
+     "page": 1,
+     "quote": "CA40312499 | PICKED_UP | 2030-07-16 | USC1 | -"
+    },
+    {
+     "doc": "batch_01/0012.eml#CDU-3051268.pdf",
+     "page": 1,
+     "quote": "USE2-INW1 CA14806242 Fuel surcharge 2,859.12 21.79% 623.00 14/07/2030"
+    },
+    {
+     "doc": "batch_01/0003.eml#MSA-CDA-US-EXP-E91.pdf",
+     "page": 3,
+     "quote": "4 Surcharges 4.1 Fuel surcharge. Fuel surcharge is the Annex C percentage for the month of the Pickup Date, applied to the base freight charge only."
+    },
+    {
+     "doc": "batch_01/0012.eml#CDU-3051268.pdf",
+     "page": 1,
+     "quote": "USE2-INS2 CA83642964 Fuel surcharge 4,280.69 21.79% 932.76 17/07/2030"
+    },
+    {
+     "doc": "batch_01/0012.eml#CDU-3051268.pdf",
+     "page": 1,
+     "quote": "USC1-INW1 CA93971959 Fuel surcharge 5,235.09 21.79% 1,140.73 17/07/2030"
+    },
+    {
+     "doc": "batch_01/0012.eml#CDU-3051268.pdf",
+     "page": 1,
+     "quote": "USC1-INW1 CA10649631 Fuel surcharge 4,997.44 21.79% 1,088.94 15/07/2030"
+    },
+    {
+     "doc": "batch_01/0012.eml#CDU-3051268.pdf",
+     "page": 1,
+     "quote": "USE2-INS2 CA72032781 Fuel surcharge 3,893.85 21.79% 848.47 13/07/2030"
+    },
+    {
+     "doc": "batch_01/0012.eml#CDU-3051268.pdf",
+     "page": 1,
+     "quote": "USE2-INW1 CA66250624 Fuel surcharge 3,383.52 21.79% 737.27 13/07/2030"
+    },
+    {
+     "doc": "batch_01/0012.eml#CDU-3051268.pdf",
+     "page": 1,
+     "quote": "USC3-USE2 CA59166758 Fuel surcharge 6,862.80 21.79% 1,495.40 17/07/2030"
+    },
+    {
+     "doc": "batch_01/0012.eml#CDU-3051268.pdf",
+     "page": 1,
+     "quote": "USE2-INW1 CA73521697 Fuel surcharge 3,315.12 21.79% 722.36 14/07/2030"
+    },
+    {
+     "doc": "batch_01/0012.eml#CDU-3051268.pdf",
+     "page": 1,
+     "quote": "USC1-INW1 CA40312499 Fuel surcharge 4,943.12 21.79% 1,077.11 16/07/2030"
+    },
+    {
+     "doc": "batch_01/0012.eml#CDU-3051268.pdf",
+     "page": 1,
+     "quote": "USE2-INW1 CA14806242 Security surcharge 627 kg 0.16 100.32 14/07/2030"
+    },
+    {
+     "doc": "batch_01/0003.eml#MSA-CDA-US-EXP-E91.pdf",
+     "page": 10,
+     "quote": "SEC Security surcharge 0.16 USD per chargeable kg"
+    },
+    {
+     "doc": "batch_01/0012.eml#CDU-3051268.pdf",
+     "page": 1,
+     "quote": "USE2-INW1 CA14806242 Delivery fee 1 shpt 52.70 52.70 14/07/2030"
+    },
+    {
+     "doc": "batch_01/0003.eml#MSA-CDA-US-EXP-E91.pdf",
+     "page": 10,
+     "quote": "DLV Delivery fee 52.70 USD per shipment"
+    },
+    {
+     "doc": "batch_01/0012.eml#CDU-3051268.pdf",
+     "page": 1,
+     "quote": "USE2-INS2 CA83642964 Security surcharge 841 kg 0.16 134.56 17/07/2030"
+    },
+    {
+     "doc": "batch_01/0012.eml#CDU-3051268.pdf",
+     "page": 1,
+     "quote": "USE2-INS2 CA83642964 Delivery fee 1 shpt 52.70 52.70 17/07/2030"
+    },
+    {
+     "doc": "batch_01/0012.eml#CDU-3051268.pdf",
+     "page": 1,
+     "quote": "USC1-INW1 CA93971959 Security surcharge 771 kg 0.16 123.36 17/07/2030"
+    },
+    {
+     "doc": "batch_01/0012.eml#CDU-3051268.pdf",
+     "page": 1,
+     "quote": "USC1-INW1 CA93971959 Delivery fee 1 shpt 52.70 52.70 17/07/2030"
+    },
+    {
+     "doc": "batch_01/0012.eml#CDU-3051268.pdf",
+     "page": 1,
+     "quote": "USC1-INW1 CA10649631 Security surcharge 736 kg 0.16 117.76 15/07/2030"
+    },
+    {
+     "doc": "batch_01/0012.eml#CDU-3051268.pdf",
+     "page": 1,
+     "quote": "USC1-INW1 CA10649631 Delivery fee 1 shpt 52.70 52.70 15/07/2030"
+    },
+    {
+     "doc": "batch_01/0012.eml#CDU-3051268.pdf",
+     "page": 1,
+     "quote": "USE2-INS2 CA72032781 Security surcharge 765 kg 0.16 122.40 13/07/2030"
+    },
+    {
+     "doc": "batch_01/0012.eml#CDU-3051268.pdf",
+     "page": 1,
+     "quote": "USE2-INS2 CA72032781 Delivery fee 1 shpt 52.70 52.70 13/07/2030"
+    },
+    {
+     "doc": "batch_01/0012.eml#CDU-3051268.pdf",
+     "page": 1,
+     "quote": "USE2-INW1 CA66250624 Security surcharge 742 kg 0.16 118.72 13/07/2030"
+    },
+    {
+     "doc": "batch_01/0012.eml#CDU-3051268.pdf",
+     "page": 1,
+     "quote": "USE2-INW1 CA66250624 Delivery fee 1 shpt 52.70 52.70 13/07/2030"
+    },
+    {
+     "doc": "batch_01/0012.eml#CDU-3051268.pdf",
+     "page": 1,
+     "quote": "USC3-USE2 CA59166758 Security surcharge 798 kg 0.16 127.68 17/07/2030"
+    },
+    {
+     "doc": "batch_01/0012.eml#CDU-3051268.pdf",
+     "page": 1,
+     "quote": "USC3-USE2 CA59166758 Delivery fee 1 shpt 52.70 52.70 17/07/2030"
+    },
+    {
+     "doc": "batch_01/0012.eml#CDU-3051268.pdf",
+     "page": 1,
+     "quote": "USE2-INW1 CA73521697 Security surcharge 727 kg 0.16 116.32 14/07/2030"
+    },
+    {
+     "doc": "batch_01/0012.eml#CDU-3051268.pdf",
+     "page": 1,
+     "quote": "USE2-INW1 CA73521697 Delivery fee 1 shpt 52.70 52.70 14/07/2030"
+    },
+    {
+     "doc": "batch_01/0012.eml#CDU-3051268.pdf",
+     "page": 1,
+     "quote": "USC1-INW1 CA40312499 Security surcharge 728 kg 0.16 116.48 16/07/2030"
+    },
+    {
+     "doc": "batch_01/0012.eml#CDU-3051268.pdf",
+     "page": 1,
+     "quote": "USC1-INW1 CA40312499 Delivery fee 1 shpt 52.70 52.70 16/07/2030"
+    }
+   ],
+   "amount_usd": null,
+   "amount_range": null,
+   "deadline": null,
+   "missing_doc": null,
+   "supersedes": [],
+   "learned_at": null,
+   "invoice_id": "CDU-3051268"
+  },
+  {
+   "id": "overcharge:CDU-3051273",
+   "class": "overcharge",
+   "verdict": "no_finding",
+   "action": "none",
+   "confidence": 0.9,
+   "evidence": [
+    {
+     "doc": "batch_01/0013.eml#CDU-3051273.pdf",
+     "page": 1,
+     "quote": "USC3-USE2 CA52396777 Air freight 255 kg 8.97 2,287.35 13/07/2030"
+    },
+    {
+     "doc": "batch_01/0003.eml#MSA-CDA-US-EXP-E91.pdf",
+     "page": 8,
+     "quote": "USC3-USE2 100-299.5 kg 8.97 9.56"
+    },
+    {
+     "doc": "batch_01/0003.eml#MSA-CDA-US-EXP-E91.pdf",
+     "page": 3,
+     "quote": "3.2 Pricing date. Each shipment is priced at the rates, surcharges and fees in force on its Pickup Date."
+    },
+    {
+     "doc": "batch_01/0016.eml#tracking-2030-01-01.xlsx",
+     "page": 1,
+     "quote": "CA52396777 | PICKED_UP | 2030-07-13 | USC3 | -"
+    },
+    {
+     "doc": "batch_01/0013.eml#CDU-3051273.pdf",
+     "page": 1,
+     "quote": "USC3-USE2 CA52396777 Fuel surcharge 2,287.35 21.79% 498.41 13/07/2030"
+    },
+    {
+     "doc": "batch_01/0003.eml#MSA-CDA-US-EXP-E91.pdf",
+     "page": 3,
+     "quote": "4 Surcharges 4.1 Fuel surcharge. Fuel surcharge is the Annex C percentage for the month of the Pickup Date, applied to the base freight charge only."
+    },
+    {
+     "doc": "batch_01/0013.eml#CDU-3051273.pdf",
+     "page": 1,
+     "quote": "USC3-USE2 CA52396777 Security surcharge 255 kg 0.16 40.80 13/07/2030"
+    },
+    {
+     "doc": "batch_01/0003.eml#MSA-CDA-US-EXP-E91.pdf",
+     "page": 10,
+     "quote": "SEC Security surcharge 0.16 USD per chargeable kg"
+    },
+    {
+     "doc": "batch_01/0013.eml#CDU-3051273.pdf",
+     "page": 1,
+     "quote": "USC3-USE2 CA52396777 Storage 6 days 59.33 355.98 13/07/2030"
+    },
+    {
+     "doc": "batch_01/0003.eml#MSA-CDA-US-EXP-E91.pdf",
+     "page": 10,
+     "quote": "STOR Storage 59.33 USD per storage day"
+    },
+    {
+     "doc": "batch_01/0013.eml#CDU-3051273.pdf",
+     "page": 1,
+     "quote": "USC3-USE2 CA52396777 Delivery fee 1 shpt 52.70 52.70 13/07/2030"
+    },
+    {
+     "doc": "batch_01/0003.eml#MSA-CDA-US-EXP-E91.pdf",
+     "page": 10,
+     "quote": "DLV Delivery fee 52.70 USD per shipment"
+    }
+   ],
+   "amount_usd": null,
+   "amount_range": null,
+   "deadline": null,
+   "missing_doc": null,
+   "supersedes": [],
+   "learned_at": null,
+   "invoice_id": "CDU-3051273"
+  },
+  {
+   "id": "duplicate:CDU-3051273",
+   "class": "duplicate",
+   "verdict": "finding",
+   "action": "draft:dispute",
+   "confidence": 0.9,
+   "evidence": [
+    {
+     "doc": "batch_01/0018.eml#ap-register-2030-08-31.xlsx",
+     "page": 1,
+     "quote": "CDU-3051273 | 2030-07-29 | due 2030-08-28 | USD 3235.24 | paid | 2030-08-27"
+    },
+    {
+     "doc": "batch_01/0017.eml",
+     "page": 1,
+     "quote": "Good afternoon Odette,\n\nOur records show invoice CDU-3051273 as outstanding.\nPlease process payment at your earliest convenience.\n\nWarm regards,\nCaldrith Billing | Billing Operations | Caldrith Air Lo"
+    }
+   ],
+   "amount_usd": "3235.24",
+   "amount_range": null,
+   "deadline": null,
+   "missing_doc": null,
+   "supersedes": [],
+   "learned_at": null,
+   "invoice_id": "CDU-3051273"
+  },
+  {
+   "id": "overcharge:CDI-3031-0303",
+   "class": "overcharge",
+   "verdict": "no_finding",
+   "action": "none",
+   "confidence": 0.9,
+   "evidence": [
+    {
+     "doc": "batch_01/0014.eml#CDI-3031-0303.pdf",
+     "page": 1,
+     "quote": "INW1-USC3 CA52931342 Air freight 273 kg 234.47 64,010.31 03/08/2030"
+    },
+    {
+     "doc": "batch_01/0001.eml#MSA-CDA-IN-EXP-E91.pdf",
+     "page": 8,
+     "quote": "INW1-USC3 100-299.5 kg 245.67 234.47"
+    },
+    {
+     "doc": "batch_01/0001.eml#MSA-CDA-IN-EXP-E91.pdf",
+     "page": 3,
+     "quote": "3.2 Pricing date. Each shipment is priced at the rates, surcharges and fees in force on its Pickup Date."
+    },
+    {
+     "doc": "batch_01/0016.eml#tracking-2030-01-01.xlsx",
+     "page": 1,
+     "quote": "CA52931342 | PICKED_UP | 2030-08-03 | INW1 | -"
+    },
+    {
+     "doc": "batch_01/0014.eml#CDI-3031-0303.pdf",
+     "page": 1,
+     "quote": "INW1-USC3 CA52931342 Fuel surcharge 64,010.31 20.32% 13,006.89 03/08/2030"
+    },
+    {
+     "doc": "batch_01/0001.eml#MSA-CDA-IN-EXP-E91.pdf",
+     "page": 3,
+     "quote": "4 Surcharges 4.1 Fuel surcharge. Fuel surcharge is the Annex C percentage for the month of the Pickup Date, applied to the base freight charge only."
+    },
+    {
+     "doc": "batch_01/0014.eml#CDI-3031-0303.pdf",
+     "page": 1,
+     "quote": "INW1-USC3 CA52931342 Security surcharge 273 kg 17.93 4,894.89 03/08/2030"
+    },
+    {
+     "doc": "batch_01/0001.eml#MSA-CDA-IN-EXP-E91.pdf",
+     "page": 10,
+     "quote": "SEC Security surcharge 17.93 INR per chargeable kg"
+    },
+    {
+     "doc": "batch_01/0014.eml#CDI-3031-0303.pdf",
+     "page": 1,
+     "quote": "INW1-USC3 CA52931342 Delivery fee 1 shpt 8644.00 8,644.00 03/08/2030"
+    },
+    {
+     "doc": "batch_01/0001.eml#MSA-CDA-IN-EXP-E91.pdf",
+     "page": 10,
+     "quote": "DLV Delivery fee 8644.00 INR per shipment"
+    }
+   ],
+   "amount_usd": null,
+   "amount_range": null,
+   "deadline": null,
+   "missing_doc": null,
+   "supersedes": [],
+   "learned_at": null,
+   "invoice_id": "CDI-3031-0303"
+  },
+  {
+   "id": "overcharge:CDU-3051277",
+   "class": "overcharge",
+   "verdict": "no_finding",
+   "action": "none",
+   "confidence": 0.9,
+   "evidence": [
+    {
+     "doc": "batch_01/0015.eml#CDU-3051277.pdf",
+     "page": 1,
+     "quote": "USC3-USE2 CA10270571 Air freight 25 kg 9.75 243.75 07/08/2030"
+    },
+    {
+     "doc": "batch_01/0003.eml#MSA-CDA-US-EXP-E91.pdf",
+     "page": 8,
+     "quote": "USC3-USE2 0-44.5 kg 9.75 10.39"
+    },
+    {
+     "doc": "batch_01/0003.eml#MSA-CDA-US-EXP-E91.pdf",
+     "page": 3,
+     "quote": "3.2 Pricing date. Each shipment is priced at the rates, surcharges and fees in force on its Pickup Date."
+    },
+    {
+     "doc": "batch_01/0016.eml#tracking-2030-01-01.xlsx",
+     "page": 1,
+     "quote": "CA10270571 | PICKED_UP | 2030-08-07 | USC3 | -"
+    },
+    {
+     "doc": "batch_01/0015.eml#CDU-3051277.pdf",
+     "page": 1,
+     "quote": "USC3-USE2 CA10270571 Fuel surcharge 243.75 21.49% 52.38 07/08/2030"
+    },
+    {
+     "doc": "batch_01/0003.eml#MSA-CDA-US-EXP-E91.pdf",
+     "page": 3,
+     "quote": "4 Surcharges 4.1 Fuel surcharge. Fuel surcharge is the Annex C percentage for the month of the Pickup Date, applied to the base freight charge only."
+    },
+    {
+     "doc": "batch_01/0015.eml#CDU-3051277.pdf",
+     "page": 1,
+     "quote": "USC3-USE2 CA10270571 Security surcharge 25 kg 0.16 4.00 07/08/2030"
+    },
+    {
+     "doc": "batch_01/0003.eml#MSA-CDA-US-EXP-E91.pdf",
+     "page": 10,
+     "quote": "SEC Security surcharge 0.16 USD per chargeable kg"
+    },
+    {
+     "doc": "batch_01/0015.eml#CDU-3051277.pdf",
+     "page": 1,
+     "quote": "USC3-USE2 CA10270571 Delivery fee 1 shpt 52.70 52.70 07/08/2030"
+    },
+    {
+     "doc": "batch_01/0003.eml#MSA-CDA-US-EXP-E91.pdf",
+     "page": 10,
+     "quote": "DLV Delivery fee 52.70 USD per shipment"
+    }
+   ],
+   "amount_usd": null,
+   "amount_range": null,
+   "deadline": null,
+   "missing_doc": null,
+   "supersedes": [],
+   "learned_at": null,
+   "invoice_id": "CDU-3051277"
+  },
+  {
+   "id": "late_fee_not_owed:CDU-3051277",
+   "class": "late_fee_not_owed",
+   "verdict": "finding",
+   "action": "draft:dispute",
+   "confidence": 0.85,
+   "evidence": [
+    {
+     "doc": "batch_01/0015.eml#CDU-3051277.pdf",
+     "page": 1,
+     "quote": "- - Late fee on CDU-3051262: USD 1448.48 overdue, month 1 @ 1.49% 1 month 1.49% 21.58 -"
+    },
+    {
+     "doc": "batch_01/0018.eml#ap-register-2030-08-31.xlsx",
+     "page": 1,
+     "quote": "CDU-3051262 | 2030-06-15 | due 2030-07-15 | USD 1448.48 | paid | 2030-07-23"
+    },
+    {
+     "doc": "batch_01/0011.eml",
+     "page": 1,
+     "quote": "Invoice CDU-3051262 now falls due on 2030-07-25 (extended under clause 10.5)."
+    }
+   ],
+   "amount_usd": "21.58",
+   "amount_range": null,
+   "deadline": null,
+   "missing_doc": null,
+   "supersedes": [],
+   "learned_at": null,
+   "invoice_id": "CDU-3051277"
+  },
+  {
+   "id": "overcharge:CDU-3051292",
+   "class": "overcharge",
+   "verdict": "no_finding",
+   "action": "none",
+   "confidence": 0.9,
+   "evidence": [
+    {
+     "doc": "batch_02/0002.eml#CDU-3051292.pdf",
+     "page": 1,
+     "quote": "USE2-INW1 CA36610546 Air freight 559 kg 4.56 2,549.04 09/09/2030"
+    },
+    {
+     "doc": "batch_01/0003.eml#MSA-CDA-US-EXP-E91.pdf",
+     "page": 8,
+     "quote": "USE2-INW1 300+ kg 4.56 4.86"
+    },
+    {
+     "doc": "batch_01/0003.eml#MSA-CDA-US-EXP-E91.pdf",
+     "page": 3,
+     "quote": "3.2 Pricing date. Each shipment is priced at the rates, surcharges and fees in force on its Pickup Date."
+    },
+    {
+     "doc": "batch_02/0022.eml#tracking-2030-09-01.xlsx",
+     "page": 1,
+     "quote": "CA36610546 | PICKED_UP | 2030-09-09 | USE2 | -"
+    },
+    {
+     "doc": "batch_02/0002.eml#CDU-3051292.pdf",
+     "page": 1,
+     "quote": "USC3-USE2 CA10321642 Air freight 642 kg 8.60 5,521.20 11/09/2030"
+    },
+    {
+     "doc": "batch_01/0003.eml#MSA-CDA-US-EXP-E91.pdf",
+     "page": 8,
+     "quote": "USC3-USE2 300+ kg 8.60 9.17"
+    },
+    {
+     "doc": "batch_02/0022.eml#tracking-2030-09-01.xlsx",
+     "page": 1,
+     "quote": "CA10321642 | PICKED_UP | 2030-09-11 | USC3 | -"
+    },
+    {
+     "doc": "batch_02/0002.eml#CDU-3051292.pdf",
+     "page": 1,
+     "quote": "USC1-INW1 CA66572021 Air freight 650 kg 6.79 4,413.50 08/09/2030"
+    },
+    {
+     "doc": "batch_01/0003.eml#MSA-CDA-US-EXP-E91.pdf",
+     "page": 8,
+     "quote": "USC1-INW1 300+ kg 6.79 7.24"
+    },
+    {
+     "doc": "batch_02/0022.eml#tracking-2030-09-01.xlsx",
+     "page": 1,
+     "quote": "CA66572021 | PICKED_UP | 2030-09-08 | USC1 | -"
+    },
+    {
+     "doc": "batch_02/0002.eml#CDU-3051292.pdf",
+     "page": 1,
+     "quote": "USC1-INW1 CA71632356 Air freight 626 kg 6.79 4,250.54 11/09/2030"
+    },
+    {
+     "doc": "batch_02/0022.eml#tracking-2030-09-01.xlsx",
+     "page": 1,
+     "quote": "CA71632356 | PICKED_UP | 2030-09-11 | USC1 | -"
+    },
+    {
+     "doc": "batch_02/0002.eml#CDU-3051292.pdf",
+     "page": 1,
+     "quote": "USC3-USE2 CA74039031 Air freight 368 kg 8.60 3,164.80 09/09/2030"
+    },
+    {
+     "doc": "batch_02/0022.eml#tracking-2030-09-01.xlsx",
+     "page": 1,
+     "quote": "CA74039031 | PICKED_UP | 2030-09-09 | USC3 | -"
+    },
+    {
+     "doc": "batch_02/0002.eml#CDU-3051292.pdf",
+     "page": 1,
+     "quote": "USC3-USE2 CA66004018 Air freight 450 kg 8.60 3,870.00 11/09/2030"
+    },
+    {
+     "doc": "batch_02/0022.eml#tracking-2030-09-01.xlsx",
+     "page": 1,
+     "quote": "CA66004018 | PICKED_UP | 2030-09-11 | USC3 | -"
+    },
+    {
+     "doc": "batch_02/0002.eml#CDU-3051292.pdf",
+     "page": 1,
+     "quote": "USE2-INW1 CA36610546 Fuel surcharge 2,549.04 19.40% 494.51 09/09/2030"
+    },
+    {
+     "doc": "batch_01/0003.eml#MSA-CDA-US-EXP-E91.pdf",
+     "page": 3,
+     "quote": "4 Surcharges 4.1 Fuel surcharge. Fuel surcharge is the Annex C percentage for the month of the Pickup Date, applied to the base freight charge only."
+    },
+    {
+     "doc": "batch_02/0002.eml#CDU-3051292.pdf",
+     "page": 1,
+     "quote": "USC3-USE2 CA10321642 Fuel surcharge 5,521.20 19.40% 1,071.11 11/09/2030"
+    },
+    {
+     "doc": "batch_02/0002.eml#CDU-3051292.pdf",
+     "page": 1,
+     "quote": "USC1-INW1 CA66572021 Fuel surcharge 4,413.50 19.40% 856.22 08/09/2030"
+    },
+    {
+     "doc": "batch_02/0002.eml#CDU-3051292.pdf",
+     "page": 1,
+     "quote": "USC1-INW1 CA71632356 Fuel surcharge 4,250.54 19.40% 824.60 11/09/2030"
+    },
+    {
+     "doc": "batch_02/0002.eml#CDU-3051292.pdf",
+     "page": 1,
+     "quote": "USC3-USE2 CA74039031 Fuel surcharge 3,164.80 19.40% 613.97 09/09/2030"
+    },
+    {
+     "doc": "batch_02/0002.eml#CDU-3051292.pdf",
+     "page": 1,
+     "quote": "USC3-USE2 CA66004018 Fuel surcharge 3,870.00 19.40% 750.78 11/09/2030"
+    },
+    {
+     "doc": "batch_02/0002.eml#CDU-3051292.pdf",
+     "page": 1,
+     "quote": "USE2-INW1 CA36610546 Security surcharge 559 kg 0.16 89.44 09/09/2030"
+    },
+    {
+     "doc": "batch_01/0003.eml#MSA-CDA-US-EXP-E91.pdf",
+     "page": 10,
+     "quote": "SEC Security surcharge 0.16 USD per chargeable kg"
+    },
+    {
+     "doc": "batch_02/0002.eml#CDU-3051292.pdf",
+     "page": 1,
+     "quote": "USE2-INW1 CA36610546 Delivery fee 1 shpt 52.70 52.70 09/09/2030"
+    },
+    {
+     "doc": "batch_01/0003.eml#MSA-CDA-US-EXP-E91.pdf",
+     "page": 10,
+     "quote": "DLV Delivery fee 52.70 USD per shipment"
+    },
+    {
+     "doc": "batch_02/0002.eml#CDU-3051292.pdf",
+     "page": 1,
+     "quote": "USC3-USE2 CA10321642 Security surcharge 642 kg 0.16 102.72 11/09/2030"
+    },
+    {
+     "doc": "batch_02/0002.eml#CDU-3051292.pdf",
+     "page": 1,
+     "quote": "USC3-USE2 CA10321642 Delivery fee 1 shpt 52.70 52.70 11/09/2030"
+    },
+    {
+     "doc": "batch_02/0002.eml#CDU-3051292.pdf",
+     "page": 1,
+     "quote": "USC1-INW1 CA66572021 Security surcharge 650 kg 0.16 104.00 08/09/2030"
+    },
+    {
+     "doc": "batch_02/0002.eml#CDU-3051292.pdf",
+     "page": 1,
+     "quote": "USC1-INW1 CA66572021 Delivery fee 1 shpt 52.70 52.70 08/09/2030"
+    },
+    {
+     "doc": "batch_02/0002.eml#CDU-3051292.pdf",
+     "page": 1,
+     "quote": "USC1-INW1 CA71632356 Security surcharge 626 kg 0.16 100.16 11/09/2030"
+    },
+    {
+     "doc": "batch_02/0002.eml#CDU-3051292.pdf",
+     "page": 1,
+     "quote": "USC1-INW1 CA71632356 Delivery fee 1 shpt 52.70 52.70 11/09/2030"
+    },
+    {
+     "doc": "batch_02/0002.eml#CDU-3051292.pdf",
+     "page": 1,
+     "quote": "USC3-USE2 CA74039031 Security surcharge 368 kg 0.16 58.88 09/09/2030"
+    },
+    {
+     "doc": "batch_02/0002.eml#CDU-3051292.pdf",
+     "page": 1,
+     "quote": "USC3-USE2 CA74039031 Delivery fee 1 shpt 52.70 52.70 09/09/2030"
+    },
+    {
+     "doc": "batch_02/0002.eml#CDU-3051292.pdf",
+     "page": 1,
+     "quote": "USC3-USE2 CA66004018 Security surcharge 450 kg 0.16 72.00 11/09/2030"
+    },
+    {
+     "doc": "batch_02/0002.eml#CDU-3051292.pdf",
+     "page": 1,
+     "quote": "USC3-USE2 CA66004018 Delivery fee 1 shpt 52.70 52.70 11/09/2030"
+    }
+   ],
+   "amount_usd": null,
+   "amount_range": null,
+   "deadline": null,
+   "missing_doc": null,
+   "supersedes": [],
+   "learned_at": null,
+   "invoice_id": "CDU-3051292"
+  },
+  {
+   "id": "overcharge:CDU-3051286",
+   "class": "overcharge",
+   "verdict": "cannot_determine",
+   "action": "draft:request_document",
+   "confidence": 0.6,
+   "evidence": [
+    {
+     "doc": "batch_01/0004.eml#CDA-US-EXP-E91-AMD-1.pdf",
+     "page": 1,
+     "quote": "The Annex A rates for lane(s) USW2-USW1 are deleted and replaced as follows: Annex A rev 2 (attached) applies from 2030-09-07 to lane(s) USW2-USW1."
+    }
+   ],
+   "amount_usd": null,
+   "amount_range": null,
+   "deadline": null,
+   "missing_doc": {
+    "name": "Annex A rev 2",
+    "holder": {
+     "person": "Farid Pembroke",
+     "party": "CDA-IN",
+     "role": "Pricing Manager"
+    }
+   },
+   "supersedes": [],
+   "learned_at": null,
+   "invoice_id": "CDU-3051286"
+  },
+  {
+   "id": "overcharge:CDU-3051297",
+   "class": "overcharge",
+   "verdict": "finding",
+   "action": "draft:dispute",
+   "confidence": 0.9,
+   "evidence": [
+    {
+     "doc": "batch_02/0004.eml#CDU-3051297.pdf",
+     "page": 1,
+     "quote": "USE2-INS2 CA24035181 Air freight 85 kg 6.36 540.60 20/09/2030"
+    },
+    {
+     "doc": "batch_01/0003.eml#MSA-CDA-US-EXP-E91.pdf",
+     "page": 8,
+     "quote": "USE2-INS2 45-99.5 kg 6.36 6.78"
+    },
+    {
+     "doc": "batch_01/0003.eml#MSA-CDA-US-EXP-E91.pdf",
+     "page": 3,
+     "quote": "3.2 Pricing date. Each shipment is priced at the rates, surcharges and fees in force on its Pickup Date."
+    },
+    {
+     "doc": "batch_02/0022.eml#tracking-2030-09-01.xlsx",
+     "page": 1,
+     "quote": "CA24035181 | PICKED_UP | 2030-09-20 | USE2 | -"
+    },
+    {
+     "doc": "batch_02/0004.eml#CDU-3051297.pdf",
+     "page": 1,
+     "quote": "USE2-INS2 CA24035181 Fuel surcharge 540.60 19.40% 104.88 20/09/2030"
+    },
+    {
+     "doc": "batch_01/0003.eml#MSA-CDA-US-EXP-E91.pdf",
+     "page": 3,
+     "quote": "4 Surcharges 4.1 Fuel surcharge. Fuel surcharge is the Annex C percentage for the month of the Pickup Date, applied to the base freight charge only."
+    },
+    {
+     "doc": "batch_02/0004.eml#CDU-3051297.pdf",
+     "page": 1,
+     "quote": "USE2-INS2 CA24035181 Security surcharge 85 kg 0.16 13.60 20/09/2030"
+    },
+    {
+     "doc": "batch_01/0003.eml#MSA-CDA-US-EXP-E91.pdf",
+     "page": 10,
+     "quote": "SEC Security surcharge 0.16 USD per chargeable kg"
+    },
+    {
+     "doc": "batch_02/0004.eml#CDU-3051297.pdf",
+     "page": 1,
+     "quote": "USE2-INS2 CA24035181 Dry ice handling fee 1 shpt 54.23 54.23 20/09/2030"
+    },
+    {
+     "doc": "batch_01/0003.eml#MSA-CDA-US-EXP-E91.pdf",
+     "page": 10,
+     "quote": "DRYICE Dry ice handling fee 54.23 USD per shipment"
+    },
+    {
+     "doc": "batch_02/0004.eml#CDU-3051297.pdf",
+     "page": 1,
+     "quote": "USE2-INS2 CA24035181 DG handling 1 shpt 155.65 155.65 20/09/2030"
+    },
+    {
+     "doc": "batch_02/0004.eml#DGD-CA24035181.pdf",
+     "page": 1,
+     "quote": "UN1845 Dry ice 18.6 kg - refrigerant only"
+    },
+    {
+     "doc": "batch_01/0003.eml#MSA-CDA-US-EXP-E91.pdf",
+     "page": 3,
+     "quote": "5 Dangerous goods and dry ice 5.1 Dangerous goods fee. Shipments requiring a dangerous goods declaration attract the DG Fee in Annex D, once per shipment."
+    },
+    {
+     "doc": "batch_02/0004.eml#CDU-3051297.pdf",
+     "page": 1,
+     "quote": "USE2-INS2 CA24035181 Delivery fee 1 shpt 52.70 52.70 20/09/2030"
+    },
+    {
+     "doc": "batch_01/0003.eml#MSA-CDA-US-EXP-E91.pdf",
+     "page": 10,
+     "quote": "DLV Delivery fee 52.70 USD per shipment"
+    }
+   ],
+   "amount_usd": "155.65",
+   "amount_range": null,
+   "deadline": null,
+   "missing_doc": null,
+   "supersedes": [],
+   "learned_at": null,
+   "invoice_id": "CDU-3051297"
+  },
+  {
+   "id": "overcharge:CDU-3051302",
+   "class": "overcharge",
+   "verdict": "conflict",
+   "action": "escalate",
+   "confidence": 0.9,
+   "evidence": [
+    {
+     "doc": "batch_02/0005.eml#CDU-3051302.pdf",
+     "page": 1,
+     "quote": "USE2-USC3 CA60423720 Air freight 133 kg 4.38 582.54 21/09/2030"
+    },
+    {
+     "doc": "batch_02/0001.eml",
+     "page": 1,
+     "quote": "USE2-USC3 100-299.5 kg = USD 4.38"
+    },
+    {
+     "doc": "batch_01/0003.eml#MSA-CDA-US-EXP-E91.pdf",
+     "page": 3,
+     "quote": "3.2 Pricing date. Each shipment is priced at the rates, surcharges and fees in force on its Pickup Date."
+    },
+    {
+     "doc": "batch_02/0022.eml#tracking-2030-09-01.xlsx",
+     "page": 1,
+     "quote": "CA60423720 | PICKED_UP | 2030-09-21 | USE2 | -"
+    },
+    {
+     "doc": "batch_02/0005.eml#CDU-3051302.pdf",
+     "page": 1,
+     "quote": "USE2-USC3 CA60423720 Fuel surcharge 582.54 19.40% 113.01 21/09/2030"
+    },
+    {
+     "doc": "batch_01/0003.eml#MSA-CDA-US-EXP-E91.pdf",
+     "page": 3,
+     "quote": "4 Surcharges 4.1 Fuel surcharge. Fuel surcharge is the Annex C percentage for the month of the Pickup Date, applied to the base freight charge only."
+    },
+    {
+     "doc": "batch_02/0005.eml#CDU-3051302.pdf",
+     "page": 1,
+     "quote": "USE2-USC3 CA60423720 Security surcharge 133 kg 0.16 21.28 21/09/2030"
+    },
+    {
+     "doc": "batch_01/0003.eml#MSA-CDA-US-EXP-E91.pdf",
+     "page": 10,
+     "quote": "SEC Security surcharge 0.16 USD per chargeable kg"
+    },
+    {
+     "doc": "batch_02/0005.eml#CDU-3051302.pdf",
+     "page": 1,
+     "quote": "USE2-USC3 CA60423720 Delivery fee 1 shpt 52.70 52.70 21/09/2030"
+    },
+    {
+     "doc": "batch_01/0003.eml#MSA-CDA-US-EXP-E91.pdf",
+     "page": 10,
+     "quote": "DLV Delivery fee 52.70 USD per shipment"
+    },
+    {
+     "doc": "batch_01/0004.eml#CDA-US-EXP-E91-AMD-1.pdf",
+     "page": 1,
+     "quote": "USE2-USC3 100-299.5 kg 3.99 USD"
+    },
+    {
+     "doc": "batch_01/0003.eml#MSA-CDA-US-EXP-E91.pdf",
+     "page": 4,
+     "quote": "13.3 Unranked instruments. Where a rate notice under clause 3.5 and an amendment state different rates for the same lane and period, the parties shall resolve the difference jointly; neither prevails automatically."
+    }
+   ],
+   "amount_usd": null,
+   "amount_range": [
+    "0.00",
+    "61.93"
+   ],
+   "deadline": null,
+   "missing_doc": null,
+   "supersedes": [],
+   "learned_at": null,
+   "invoice_id": "CDU-3051302"
+  },
+  {
+   "id": "overcharge:CDU-3051304",
+   "class": "overcharge",
+   "verdict": "no_finding",
+   "action": "none",
+   "confidence": 0.9,
+   "evidence": [
+    {
+     "doc": "batch_02/0006.eml#CDU-3051304.pdf",
+     "page": 1,
+     "quote": "USE2-INS2 CA96669138-H1 Air freight (MAWB CA96669138) 51 kg 6.36 324.36 26/09/2030"
+    },
+    {
+     "doc": "batch_01/0003.eml#MSA-CDA-US-EXP-E91.pdf",
+     "page": 8,
+     "quote": "USE2-INS2 45-99.5 kg 6.36 6.78"
+    },
+    {
+     "doc": "batch_01/0003.eml#MSA-CDA-US-EXP-E91.pdf",
+     "page": 3,
+     "quote": "3.2 Pricing date. Each shipment is priced at the rates, surcharges and fees in force on its Pickup Date."
+    },
+    {
+     "doc": "batch_02/0022.eml#tracking-2030-09-01.xlsx",
+     "page": 1,
+     "quote": "CA96669138-H1 | PICKED_UP | 2030-09-26 | USE2 | -"
+    },
+    {
+     "doc": "batch_02/0006.eml#CDU-3051304.pdf",
+     "page": 1,
+     "quote": "USE2-INS2 CA96669138-H1 Fuel surcharge (MAWB CA96669138) 324.36 19.40% 62.93 26/09/2030"
+    },
+    {
+     "doc": "batch_01/0003.eml#MSA-CDA-US-EXP-E91.pdf",
+     "page": 3,
+     "quote": "4 Surcharges 4.1 Fuel surcharge. Fuel surcharge is the Annex C percentage for the month of the Pickup Date, applied to the base freight charge only."
+    },
+    {
+     "doc": "batch_02/0006.eml#CDU-3051304.pdf",
+     "page": 1,
+     "quote": "USE2-INS2 CA96669138-H1 Security surcharge (MAWB CA96669138) 51 kg 0.16 8.16 26/09/2030"
+    },
+    {
+     "doc": "batch_01/0003.eml#MSA-CDA-US-EXP-E91.pdf",
+     "page": 10,
+     "quote": "SEC Security surcharge 0.16 USD per chargeable kg"
+    },
+    {
+     "doc": "batch_02/0006.eml#CDU-3051304.pdf",
+     "page": 1,
+     "quote": "USE2-INS2 CA96669138-H1 Delivery fee (MAWB CA96669138) 1 shpt 52.70 52.70 26/09/2030"
+    },
+    {
+     "doc": "batch_01/0003.eml#MSA-CDA-US-EXP-E91.pdf",
+     "page": 10,
+     "quote": "DLV Delivery fee 52.70 USD per shipment"
+    }
+   ],
+   "amount_usd": null,
+   "amount_range": null,
+   "deadline": null,
+   "missing_doc": null,
+   "supersedes": [],
+   "learned_at": null,
+   "invoice_id": "CDU-3051304"
+  },
+  {
+   "id": "overcharge:CDU-3051313",
+   "class": "overcharge",
+   "verdict": "no_finding",
+   "action": "none",
+   "confidence": 0.9,
+   "evidence": [
+    {
+     "doc": "batch_02/0007.eml#CDU-3051313.pdf",
+     "page": 1,
+     "quote": "USE2-INS2 CA96669138-H2 Air freight (MAWB CA96669138) 103 kg 5.69 586.07 26/09/2030"
+    },
+    {
+     "doc": "batch_01/0003.eml#MSA-CDA-US-EXP-E91.pdf",
+     "page": 8,
+     "quote": "USE2-INS2 100-299.5 kg 5.69 6.06"
+    },
+    {
+     "doc": "batch_01/0003.eml#MSA-CDA-US-EXP-E91.pdf",
+     "page": 3,
+     "quote": "3.2 Pricing date. Each shipment is priced at the rates, surcharges and fees in force on its Pickup Date."
+    },
+    {
+     "doc": "batch_02/0022.eml#tracking-2030-09-01.xlsx",
+     "page": 1,
+     "quote": "CA96669138-H2 | PICKED_UP | 2030-09-26 | USE2 | -"
+    },
+    {
+     "doc": "batch_02/0007.eml#CDU-3051313.pdf",
+     "page": 1,
+     "quote": "USE2-INS2 CA96669138-H2 Fuel surcharge (MAWB CA96669138) 586.07 19.40% 113.70 26/09/2030"
+    },
+    {
+     "doc": "batch_01/0003.eml#MSA-CDA-US-EXP-E91.pdf",
+     "page": 3,
+     "quote": "4 Surcharges 4.1 Fuel surcharge. Fuel surcharge is the Annex C percentage for the month of the Pickup Date, applied to the base freight charge only."
+    },
+    {
+     "doc": "batch_02/0007.eml#CDU-3051313.pdf",
+     "page": 1,
+     "quote": "USE2-INS2 CA96669138-H2 Security surcharge (MAWB CA96669138) 103 kg 0.16 16.48 26/09/2030"
+    },
+    {
+     "doc": "batch_01/0003.eml#MSA-CDA-US-EXP-E91.pdf",
+     "page": 10,
+     "quote": "SEC Security surcharge 0.16 USD per chargeable kg"
+    },
+    {
+     "doc": "batch_02/0007.eml#CDU-3051313.pdf",
+     "page": 1,
+     "quote": "USE2-INS2 CA96669138-H2 Delivery fee (MAWB CA96669138) 1 shpt 52.70 52.70 26/09/2030"
+    },
+    {
+     "doc": "batch_01/0003.eml#MSA-CDA-US-EXP-E91.pdf",
+     "page": 10,
+     "quote": "DLV Delivery fee 52.70 USD per shipment"
+    }
+   ],
+   "amount_usd": null,
+   "amount_range": null,
+   "deadline": null,
+   "missing_doc": null,
+   "supersedes": [],
+   "learned_at": null,
+   "invoice_id": "CDU-3051313"
+  },
+  {
+   "id": "overcharge:CDU-3051319",
+   "class": "overcharge",
+   "verdict": "no_finding",
+   "action": "none",
+   "confidence": 0.9,
+   "evidence": [
+    {
+     "doc": "batch_02/0010.eml#CDU-3051319.pdf",
+     "page": 1,
+     "quote": "USC1-INW1 CA75002799 Air freight 369 kg 7.24 2,671.56 10/10/2030"
+    },
+    {
+     "doc": "batch_01/0003.eml#MSA-CDA-US-EXP-E91.pdf",
+     "page": 8,
+     "quote": "USC1-INW1 300+ kg 6.79 7.24"
+    },
+    {
+     "doc": "batch_01/0003.eml#MSA-CDA-US-EXP-E91.pdf",
+     "page": 3,
+     "quote": "3.2 Pricing date. Each shipment is priced at the rates, surcharges and fees in force on its Pickup Date."
+    },
+    {
+     "doc": "batch_02/0022.eml#tracking-2030-09-01.xlsx",
+     "page": 1,
+     "quote": "CA75002799 | PICKED_UP | 2030-10-10 | USC1 | -"
+    },
+    {
+     "doc": "batch_02/0010.eml#CDU-3051319.pdf",
+     "page": 1,
+     "quote": "USC1-INW1 CA75002799 Fuel surcharge 2,671.56 18.41% 491.83 10/10/2030"
+    },
+    {
+     "doc": "batch_01/0003.eml#MSA-CDA-US-EXP-E91.pdf",
+     "page": 3,
+     "quote": "4 Surcharges 4.1 Fuel surcharge. Fuel surcharge is the Annex C percentage for the month of the Pickup Date, applied to the base freight charge only."
+    },
+    {
+     "doc": "batch_02/0010.eml#CDU-3051319.pdf",
+     "page": 1,
+     "quote": "USC1-INW1 CA75002799 Security surcharge 369 kg 0.16 59.04 10/10/2030"
+    },
+    {
+     "doc": "batch_01/0003.eml#MSA-CDA-US-EXP-E91.pdf",
+     "page": 10,
+     "quote": "SEC Security surcharge 0.16 USD per chargeable kg"
+    },
+    {
+     "doc": "batch_02/0010.eml#CDU-3051319.pdf",
+     "page": 1,
+     "quote": "USC1-INW1 CA75002799 Delivery fee 1 shpt 52.70 52.70 10/10/2030"
+    },
+    {
+     "doc": "batch_01/0003.eml#MSA-CDA-US-EXP-E91.pdf",
+     "page": 10,
+     "quote": "DLV Delivery fee 52.70 USD per shipment"
+    }
+   ],
+   "amount_usd": null,
+   "amount_range": null,
+   "deadline": null,
+   "missing_doc": null,
+   "supersedes": [],
+   "learned_at": null,
+   "invoice_id": "CDU-3051319"
+  },
+  {
+   "id": "overcharge:CDU-3051323",
+   "class": "overcharge",
+   "verdict": "no_finding",
+   "action": "none",
+   "confidence": 0.9,
+   "evidence": [
+    {
+     "doc": "batch_02/0011.eml#CDU-3051323.pdf",
+     "page": 1,
+     "quote": "USC1-INW1 CA53967408 Air freight 200 kg 7.64 1,528.00 17/08/2030"
+    },
+    {
+     "doc": "batch_01/0003.eml#MSA-CDA-US-EXP-E91.pdf",
+     "page": 8,
+     "quote": "USC1-INW1 100-299.5 kg 7.64 8.15"
+    },
+    {
+     "doc": "batch_01/0003.eml#MSA-CDA-US-EXP-E91.pdf",
+     "page": 3,
+     "quote": "3.2 Pricing date. Each shipment is priced at the rates, surcharges and fees in force on its Pickup Date."
+    },
+    {
+     "doc": "batch_01/0016.eml#tracking-2030-01-01.xlsx",
+     "page": 1,
+     "quote": "CA53967408 | PICKED_UP | 2030-08-17 | USC1 | -"
+    },
+    {
+     "doc": "batch_02/0011.eml#CDU-3051323.pdf",
+     "page": 1,
+     "quote": "USC3-USE2 CA14041963 Air freight 233 kg 8.97 2,090.01 18/09/2030"
+    },
+    {
+     "doc": "batch_01/0003.eml#MSA-CDA-US-EXP-E91.pdf",
+     "page": 8,
+     "quote": "USC3-USE2 100-299.5 kg 8.97 9.56"
+    },
+    {
+     "doc": "batch_02/0022.eml#tracking-2030-09-01.xlsx",
+     "page": 1,
+     "quote": "CA14041963 | PICKED_UP | 2030-09-18 | USC3 | -"
+    },
+    {
+     "doc": "batch_02/0011.eml#CDU-3051323.pdf",
+     "page": 1,
+     "quote": "USE2-INW1 CA75329761 Air freight 157 kg 5.46 857.22 14/10/2030"
+    },
+    {
+     "doc": "batch_01/0003.eml#MSA-CDA-US-EXP-E91.pdf",
+     "page": 8,
+     "quote": "USE2-INW1 100-299.5 kg 5.12 5.46"
+    },
+    {
+     "doc": "batch_02/0022.eml#tracking-2030-09-01.xlsx",
+     "page": 1,
+     "quote": "CA75329761 | PICKED_UP | 2030-10-14 | USE2 | -"
+    },
+    {
+     "doc": "batch_02/0011.eml#CDU-3051323.pdf",
+     "page": 1,
+     "quote": "USC1-INW1 CA53967408 Fuel surcharge 1,528.00 21.49% 328.37 17/08/2030"
+    },
+    {
+     "doc": "batch_01/0003.eml#MSA-CDA-US-EXP-E91.pdf",
+     "page": 3,
+     "quote": "4 Surcharges 4.1 Fuel surcharge. Fuel surcharge is the Annex C percentage for the month of the Pickup Date, applied to the base freight charge only."
+    },
+    {
+     "doc": "batch_02/0011.eml#CDU-3051323.pdf",
+     "page": 1,
+     "quote": "USC3-USE2 CA14041963 Fuel surcharge 2,090.01 19.40% 405.46 18/09/2030"
+    },
+    {
+     "doc": "batch_02/0011.eml#CDU-3051323.pdf",
+     "page": 1,
+     "quote": "USE2-INW1 CA75329761 Fuel surcharge 857.22 18.41% 157.81 14/10/2030"
+    },
+    {
+     "doc": "batch_02/0011.eml#CDU-3051323.pdf",
+     "page": 1,
+     "quote": "USC1-INW1 CA53967408 Security surcharge 200 kg 0.16 32.00 17/08/2030"
+    },
+    {
+     "doc": "batch_01/0003.eml#MSA-CDA-US-EXP-E91.pdf",
+     "page": 10,
+     "quote": "SEC Security surcharge 0.16 USD per chargeable kg"
+    },
+    {
+     "doc": "batch_02/0011.eml#CDU-3051323.pdf",
+     "page": 1,
+     "quote": "USC1-INW1 CA53967408 Delivery fee 1 shpt 52.70 52.70 17/08/2030"
+    },
+    {
+     "doc": "batch_01/0003.eml#MSA-CDA-US-EXP-E91.pdf",
+     "page": 10,
+     "quote": "DLV Delivery fee 52.70 USD per shipment"
+    },
+    {
+     "doc": "batch_02/0011.eml#CDU-3051323.pdf",
+     "page": 1,
+     "quote": "USC3-USE2 CA14041963 Security surcharge 233 kg 0.16 37.28 18/09/2030"
+    },
+    {
+     "doc": "batch_02/0011.eml#CDU-3051323.pdf",
+     "page": 1,
+     "quote": "USC3-USE2 CA14041963 Delivery fee 1 shpt 52.70 52.70 18/09/2030"
+    },
+    {
+     "doc": "batch_02/0011.eml#CDU-3051323.pdf",
+     "page": 1,
+     "quote": "USE2-INW1 CA75329761 Security surcharge 157 kg 0.16 25.12 14/10/2030"
+    },
+    {
+     "doc": "batch_02/0011.eml#CDU-3051323.pdf",
+     "page": 1,
+     "quote": "USE2-INW1 CA75329761 Delivery fee 1 shpt 52.70 52.70 14/10/2030"
+    }
+   ],
+   "amount_usd": null,
+   "amount_range": null,
+   "deadline": null,
+   "missing_doc": null,
+   "supersedes": [],
+   "learned_at": null,
+   "invoice_id": "CDU-3051323"
+  },
+  {
+   "id": "waived_but_billed:CDU-3051323",
+   "class": "waived_but_billed",
+   "verdict": "finding",
+   "action": "draft:dispute",
+   "confidence": 0.85,
+   "evidence": [
+    {
+     "doc": "batch_02/0009.eml",
+     "page": 1,
+     "quote": "The Delivery fee billed against AWB CA75329761 is waived, with our apologies."
+    },
+    {
+     "doc": "batch_02/0011.eml#CDU-3051323.pdf",
+     "page": 1,
+     "quote": "USE2-INW1 CA75329761 Delivery fee 1 shpt 52.70 52.70 14/10/2030"
+    },
+    {
+     "doc": "batch_01/0001.eml#MSA-CDA-IN-EXP-E91.pdf",
+     "page": 3,
+     "quote": "3.2 Pricing date. Each shipment is priced at the rates, surcharges and fees in force on its Pickup Date."
+    }
+   ],
+   "amount_usd": "52.70",
+   "amount_range": null,
+   "deadline": null,
+   "missing_doc": null,
+   "supersedes": [],
+   "learned_at": null,
+   "invoice_id": "CDU-3051323"
+  },
+  {
+   "id": "overcharge:CDU-3051329",
+   "class": "overcharge",
+   "verdict": "no_finding",
+   "action": "none",
+   "confidence": 0.9,
+   "evidence": [
+    {
+     "doc": "batch_02/0012.eml#CDU-3051329.pdf",
+     "page": 1,
+     "quote": "USC1-INW1 CA13570154 Air freight 600 kg 7.24 4,344.00 23/11/2030"
+    },
+    {
+     "doc": "batch_01/0003.eml#MSA-CDA-US-EXP-E91.pdf",
+     "page": 8,
+     "quote": "USC1-INW1 300+ kg 6.79 7.24"
+    },
+    {
+     "doc": "batch_01/0003.eml#MSA-CDA-US-EXP-E91.pdf",
+     "page": 3,
+     "quote": "3.2 Pricing date. Each shipment is priced at the rates, surcharges and fees in force on its Pickup Date."
+    },
+    {
+     "doc": "batch_02/0022.eml#tracking-2030-09-01.xlsx",
+     "page": 1,
+     "quote": "CA13570154 | PICKED_UP | 2030-11-23 | USC1 | -"
+    },
+    {
+     "doc": "batch_02/0012.eml#CDU-3051329.pdf",
+     "page": 1,
+     "quote": "USC1-INW1 CA30841904 Air freight 795 kg 7.24 5,755.80 26/11/2030"
+    },
+    {
+     "doc": "batch_02/0022.eml#tracking-2030-09-01.xlsx",
+     "page": 1,
+     "quote": "CA30841904 | PICKED_UP | 2030-11-26 | USC1 | -"
+    },
+    {
+     "doc": "batch_02/0012.eml#CDU-3051329.pdf",
+     "page": 1,
+     "quote": "USE2-INS2 CA64414923 Air freight 538 kg 5.42 2,915.96 25/11/2030"
+    },
+    {
+     "doc": "batch_01/0003.eml#MSA-CDA-US-EXP-E91.pdf",
+     "page": 8,
+     "quote": "USE2-INS2 300+ kg 5.09 5.42"
+    },
+    {
+     "doc": "batch_02/0022.eml#tracking-2030-09-01.xlsx",
+     "page": 1,
+     "quote": "CA64414923 | PICKED_UP | 2030-11-25 | USE2 | -"
+    },
+    {
+     "doc": "batch_02/0012.eml#CDU-3051329.pdf",
+     "page": 1,
+     "quote": "USC1-INW1 CA95475353 Air freight 729 kg 7.24 5,277.96 25/11/2030"
+    },
+    {
+     "doc": "batch_02/0022.eml#tracking-2030-09-01.xlsx",
+     "page": 1,
+     "quote": "CA95475353 | PICKED_UP | 2030-11-25 | USC1 | -"
+    },
+    {
+     "doc": "batch_02/0012.eml#CDU-3051329.pdf",
+     "page": 1,
+     "quote": "USE2-INW1 CA40587105 Air freight 699 kg 4.86 3,397.14 26/11/2030"
+    },
+    {
+     "doc": "batch_01/0003.eml#MSA-CDA-US-EXP-E91.pdf",
+     "page": 8,
+     "quote": "USE2-INW1 300+ kg 4.56 4.86"
+    },
+    {
+     "doc": "batch_02/0022.eml#tracking-2030-09-01.xlsx",
+     "page": 1,
+     "quote": "CA40587105 | PICKED_UP | 2030-11-26 | USE2 | -"
+    },
+    {
+     "doc": "batch_02/0012.eml#CDU-3051329.pdf",
+     "page": 1,
+     "quote": "USC1-INW1 CA75893484 Air freight 750 kg 7.24 5,430.00 26/11/2030"
+    },
+    {
+     "doc": "batch_02/0022.eml#tracking-2030-09-01.xlsx",
+     "page": 1,
+     "quote": "CA75893484 | PICKED_UP | 2030-11-26 | USC1 | -"
+    },
+    {
+     "doc": "batch_02/0012.eml#CDU-3051329.pdf",
+     "page": 1,
+     "quote": "USE2-INS2 CA56587669 Air freight 665 kg 5.42 3,604.30 26/11/2030"
+    },
+    {
+     "doc": "batch_02/0022.eml#tracking-2030-09-01.xlsx",
+     "page": 1,
+     "quote": "CA56587669 | PICKED_UP | 2030-11-26 | USE2 | -"
+    },
+    {
+     "doc": "batch_02/0012.eml#CDU-3051329.pdf",
+     "page": 1,
+     "quote": "USE2-INW1 CA95426266 Air freight 566 kg 4.86 2,750.76 22/11/2030"
+    },
+    {
+     "doc": "batch_02/0022.eml#tracking-2030-09-01.xlsx",
+     "page": 1,
+     "quote": "CA95426266 | PICKED_UP | 2030-11-22 | USE2 | -"
+    },
+    {
+     "doc": "batch_02/0012.eml#CDU-3051329.pdf",
+     "page": 1,
+     "quote": "USE2-INW1 CA39242212 Air freight 661 kg 4.86 3,212.46 24/11/2030"
+    },
+    {
+     "doc": "batch_02/0022.eml#tracking-2030-09-01.xlsx",
+     "page": 1,
+     "quote": "CA39242212 | PICKED_UP | 2030-11-24 | USE2 | -"
+    },
+    {
+     "doc": "batch_02/0012.eml#CDU-3051329.pdf",
+     "page": 1,
+     "quote": "USC1-INW1 CA13570154 Fuel surcharge 4,344.00 20.29% 881.40 23/11/2030"
+    },
+    {
+     "doc": "batch_01/0003.eml#MSA-CDA-US-EXP-E91.pdf",
+     "page": 3,
+     "quote": "4 Surcharges 4.1 Fuel surcharge. Fuel surcharge is the Annex C percentage for the month of the Pickup Date, applied to the base freight charge only."
+    },
+    {
+     "doc": "batch_02/0012.eml#CDU-3051329.pdf",
+     "page": 1,
+     "quote": "USC1-INW1 CA30841904 Fuel surcharge 5,755.80 20.29% 1,167.85 26/11/2030"
+    },
+    {
+     "doc": "batch_02/0012.eml#CDU-3051329.pdf",
+     "page": 1,
+     "quote": "USE2-INS2 CA64414923 Fuel surcharge 2,915.96 20.29% 591.65 25/11/2030"
+    },
+    {
+     "doc": "batch_02/0012.eml#CDU-3051329.pdf",
+     "page": 1,
+     "quote": "USC1-INW1 CA95475353 Fuel surcharge 5,277.96 20.29% 1,070.90 25/11/2030"
+    },
+    {
+     "doc": "batch_02/0012.eml#CDU-3051329.pdf",
+     "page": 1,
+     "quote": "USE2-INW1 CA40587105 Fuel surcharge 3,397.14 20.29% 689.28 26/11/2030"
+    },
+    {
+     "doc": "batch_02/0012.eml#CDU-3051329.pdf",
+     "page": 1,
+     "quote": "USC1-INW1 CA75893484 Fuel surcharge 5,430.00 20.29% 1,101.75 26/11/2030"
+    },
+    {
+     "doc": "batch_02/0012.eml#CDU-3051329.pdf",
+     "page": 1,
+     "quote": "USE2-INS2 CA56587669 Fuel surcharge 3,604.30 20.29% 731.31 26/11/2030"
+    },
+    {
+     "doc": "batch_02/0012.eml#CDU-3051329.pdf",
+     "page": 1,
+     "quote": "USE2-INW1 CA95426266 Fuel surcharge 2,750.76 20.29% 558.13 22/11/2030"
+    },
+    {
+     "doc": "batch_02/0012.eml#CDU-3051329.pdf",
+     "page": 1,
+     "quote": "USE2-INW1 CA39242212 Fuel surcharge 3,212.46 20.29% 651.81 24/11/2030"
+    },
+    {
+     "doc": "batch_02/0012.eml#CDU-3051329.pdf",
+     "page": 1,
+     "quote": "USC1-INW1 CA13570154 Security surcharge 600 kg 0.16 96.00 23/11/2030"
+    },
+    {
+     "doc": "batch_01/0003.eml#MSA-CDA-US-EXP-E91.pdf",
+     "page": 10,
+     "quote": "SEC Security surcharge 0.16 USD per chargeable kg"
+    },
+    {
+     "doc": "batch_02/0012.eml#CDU-3051329.pdf",
+     "page": 1,
+     "quote": "USC1-INW1 CA13570154 Delivery fee 1 shpt 52.70 52.70 23/11/2030"
+    },
+    {
+     "doc": "batch_01/0003.eml#MSA-CDA-US-EXP-E91.pdf",
+     "page": 10,
+     "quote": "DLV Delivery fee 52.70 USD per shipment"
+    },
+    {
+     "doc": "batch_02/0012.eml#CDU-3051329.pdf",
+     "page": 1,
+     "quote": "USC1-INW1 CA30841904 Security surcharge 795 kg 0.16 127.20 26/11/2030"
+    },
+    {
+     "doc": "batch_02/0012.eml#CDU-3051329.pdf",
+     "page": 1,
+     "quote": "USC1-INW1 CA30841904 Delivery fee 1 shpt 52.70 52.70 26/11/2030"
+    },
+    {
+     "doc": "batch_02/0012.eml#CDU-3051329.pdf",
+     "page": 1,
+     "quote": "USE2-INS2 CA64414923 Security surcharge 538 kg 0.16 86.08 25/11/2030"
+    },
+    {
+     "doc": "batch_02/0012.eml#CDU-3051329.pdf",
+     "page": 1,
+     "quote": "USE2-INS2 CA64414923 Delivery fee 1 shpt 52.70 52.70 25/11/2030"
+    },
+    {
+     "doc": "batch_02/0012.eml#CDU-3051329.pdf",
+     "page": 1,
+     "quote": "USC1-INW1 CA95475353 Security surcharge 729 kg 0.16 116.64 25/11/2030"
+    },
+    {
+     "doc": "batch_02/0012.eml#CDU-3051329.pdf",
+     "page": 1,
+     "quote": "USC1-INW1 CA95475353 Delivery fee 1 shpt 52.70 52.70 25/11/2030"
+    },
+    {
+     "doc": "batch_02/0012.eml#CDU-3051329.pdf",
+     "page": 1,
+     "quote": "USE2-INW1 CA40587105 Security surcharge 699 kg 0.16 111.84 26/11/2030"
+    },
+    {
+     "doc": "batch_02/0012.eml#CDU-3051329.pdf",
+     "page": 1,
+     "quote": "USE2-INW1 CA40587105 Delivery fee 1 shpt 52.70 52.70 26/11/2030"
+    },
+    {
+     "doc": "batch_02/0012.eml#CDU-3051329.pdf",
+     "page": 1,
+     "quote": "USC1-INW1 CA75893484 Security surcharge 750 kg 0.16 120.00 26/11/2030"
+    },
+    {
+     "doc": "batch_02/0012.eml#CDU-3051329.pdf",
+     "page": 1,
+     "quote": "USC1-INW1 CA75893484 Delivery fee 1 shpt 52.70 52.70 26/11/2030"
+    },
+    {
+     "doc": "batch_02/0012.eml#CDU-3051329.pdf",
+     "page": 1,
+     "quote": "USE2-INS2 CA56587669 Security surcharge 665 kg 0.16 106.40 26/11/2030"
+    },
+    {
+     "doc": "batch_02/0012.eml#CDU-3051329.pdf",
+     "page": 1,
+     "quote": "USE2-INS2 CA56587669 Delivery fee 1 shpt 52.70 52.70 26/11/2030"
+    },
+    {
+     "doc": "batch_02/0012.eml#CDU-3051329.pdf",
+     "page": 1,
+     "quote": "USE2-INW1 CA95426266 Security surcharge 566 kg 0.16 90.56 22/11/2030"
+    },
+    {
+     "doc": "batch_02/0012.eml#CDU-3051329.pdf",
+     "page": 1,
+     "quote": "USE2-INW1 CA95426266 Delivery fee 1 shpt 52.70 52.70 22/11/2030"
+    },
+    {
+     "doc": "batch_02/0012.eml#CDU-3051329.pdf",
+     "page": 1,
+     "quote": "USE2-INW1 CA39242212 Security surcharge 661 kg 0.16 105.76 24/11/2030"
+    },
+    {
+     "doc": "batch_02/0012.eml#CDU-3051329.pdf",
+     "page": 1,
+     "quote": "USE2-INW1 CA39242212 Delivery fee 1 shpt 52.70 52.70 24/11/2030"
+    }
+   ],
+   "amount_usd": null,
+   "amount_range": null,
+   "deadline": null,
+   "missing_doc": null,
+   "supersedes": [],
+   "learned_at": null,
+   "invoice_id": "CDU-3051329"
+  },
+  {
+   "id": "overcharge:CDU-3051334",
+   "class": "overcharge",
+   "verdict": "no_finding",
+   "action": "none",
+   "confidence": 0.9,
+   "evidence": [
+    {
+     "doc": "batch_02/0013.eml#CDU-3051334.pdf",
+     "page": 1,
+     "quote": "USE2-INW1 CA74508848 Air freight 57 kg 6.13 349.41 02/12/2030"
+    },
+    {
+     "doc": "batch_01/0003.eml#MSA-CDA-US-EXP-E91.pdf",
+     "page": 8,
+     "quote": "USE2-INW1 45-99.5 kg 5.75 6.13"
+    },
+    {
+     "doc": "batch_01/0003.eml#MSA-CDA-US-EXP-E91.pdf",
+     "page": 3,
+     "quote": "3.2 Pricing date. Each shipment is priced at the rates, surcharges and fees in force on its Pickup Date."
+    },
+    {
+     "doc": "batch_02/0022.eml#tracking-2030-09-01.xlsx",
+     "page": 1,
+     "quote": "CA74508848 | PICKED_UP | 2030-12-02 | USE2 | -"
+    },
+    {
+     "doc": "batch_02/0013.eml#CDU-3051334.pdf",
+     "page": 1,
+     "quote": "USE2-INW1 CA74508848 Fuel surcharge 349.41 17.94% 62.68 02/12/2030"
+    },
+    {
+     "doc": "batch_01/0003.eml#MSA-CDA-US-EXP-E91.pdf",
+     "page": 3,
+     "quote": "4 Surcharges 4.1 Fuel surcharge. Fuel surcharge is the Annex C percentage for the month of the Pickup Date, applied to the base freight charge only."
+    },
+    {
+     "doc": "batch_02/0013.eml#CDU-3051334.pdf",
+     "page": 1,
+     "quote": "USE2-INW1 CA74508848 Security surcharge 57 kg 0.16 9.12 02/12/2030"
+    },
+    {
+     "doc": "batch_01/0003.eml#MSA-CDA-US-EXP-E91.pdf",
+     "page": 10,
+     "quote": "SEC Security surcharge 0.16 USD per chargeable kg"
+    },
+    {
+     "doc": "batch_02/0013.eml#CDU-3051334.pdf",
+     "page": 1,
+     "quote": "USE2-INW1 CA74508848 Dry ice handling fee 1 shpt 54.23 54.23 02/12/2030"
+    },
+    {
+     "doc": "batch_01/0003.eml#MSA-CDA-US-EXP-E91.pdf",
+     "page": 10,
+     "quote": "DRYICE Dry ice handling fee 54.23 USD per shipment"
+    },
+    {
+     "doc": "batch_02/0013.eml#CDU-3051334.pdf",
+     "page": 1,
+     "quote": "USE2-INW1 CA74508848 Delivery fee 1 shpt 52.70 52.70 02/12/2030"
+    },
+    {
+     "doc": "batch_01/0003.eml#MSA-CDA-US-EXP-E91.pdf",
+     "page": 10,
+     "quote": "DLV Delivery fee 52.70 USD per shipment"
+    }
+   ],
+   "amount_usd": null,
+   "amount_range": null,
+   "deadline": null,
+   "missing_doc": null,
+   "supersedes": [],
+   "learned_at": null,
+   "invoice_id": "CDU-3051334"
+  },
+  {
+   "id": "overcharge:CDU-3051342",
+   "class": "overcharge",
+   "verdict": "no_finding",
+   "action": "none",
+   "confidence": 0.9,
+   "evidence": [
+    {
+     "doc": "batch_02/0014.eml#CDU-3051342.pdf",
+     "page": 1,
+     "quote": "USC3-USE2 CA71329447 Air freight 489 kg 9.17 4,484.13 07/12/2030"
+    },
+    {
+     "doc": "batch_01/0003.eml#MSA-CDA-US-EXP-E91.pdf",
+     "page": 8,
+     "quote": "USC3-USE2 300+ kg 8.60 9.17"
+    },
+    {
+     "doc": "batch_01/0003.eml#MSA-CDA-US-EXP-E91.pdf",
+     "page": 3,
+     "quote": "3.2 Pricing date. Each shipment is priced at the rates, surcharges and fees in force on its Pickup Date."
+    },
+    {
+     "doc": "batch_02/0022.eml#tracking-2030-09-01.xlsx",
+     "page": 1,
+     "quote": "CA71329447 | PICKED_UP | 2030-12-07 | USC3 | -"
+    },
+    {
+     "doc": "batch_02/0014.eml#CDU-3051342.pdf",
+     "page": 1,
+     "quote": "USE2-INS2 CA83887160 Air freight 316 kg 5.42 1,712.72 07/12/2030"
+    },
+    {
+     "doc": "batch_01/0003.eml#MSA-CDA-US-EXP-E91.pdf",
+     "page": 8,
+     "quote": "USE2-INS2 300+ kg 5.09 5.42"
+    },
+    {
+     "doc": "batch_02/0022.eml#tracking-2030-09-01.xlsx",
+     "page": 1,
+     "quote": "CA83887160 | PICKED_UP | 2030-12-07 | USE2 | -"
+    },
+    {
+     "doc": "batch_02/0014.eml#CDU-3051342.pdf",
+     "page": 1,
+     "quote": "USC3-USE2 CA37094535 Air freight 462 kg 9.17 4,236.54 06/12/2030"
+    },
+    {
+     "doc": "batch_02/0022.eml#tracking-2030-09-01.xlsx",
+     "page": 1,
+     "quote": "CA37094535 | PICKED_UP | 2030-12-06 | USC3 | -"
+    },
+    {
+     "doc": "batch_02/0014.eml#CDU-3051342.pdf",
+     "page": 1,
+     "quote": "USC1-INW1 CA24057121 Air freight 338 kg 7.24 2,447.12 10/12/2030"
+    },
+    {
+     "doc": "batch_01/0003.eml#MSA-CDA-US-EXP-E91.pdf",
+     "page": 8,
+     "quote": "USC1-INW1 300+ kg 6.79 7.24"
+    },
+    {
+     "doc": "batch_02/0022.eml#tracking-2030-09-01.xlsx",
+     "page": 1,
+     "quote": "CA24057121 | PICKED_UP | 2030-12-10 | USC1 | -"
+    },
+    {
+     "doc": "batch_02/0014.eml#CDU-3051342.pdf",
+     "page": 1,
+     "quote": "USC3-USE2 CA71329447 Fuel surcharge 4,484.13 17.94% 804.45 07/12/2030"
+    },
+    {
+     "doc": "batch_01/0003.eml#MSA-CDA-US-EXP-E91.pdf",
+     "page": 3,
+     "quote": "4 Surcharges 4.1 Fuel surcharge. Fuel surcharge is the Annex C percentage for the month of the Pickup Date, applied to the base freight charge only."
+    },
+    {
+     "doc": "batch_02/0014.eml#CDU-3051342.pdf",
+     "page": 1,
+     "quote": "USE2-INS2 CA83887160 Fuel surcharge 1,712.72 17.94% 307.26 07/12/2030"
+    },
+    {
+     "doc": "batch_02/0014.eml#CDU-3051342.pdf",
+     "page": 1,
+     "quote": "USC3-USE2 CA37094535 Fuel surcharge 4,236.54 17.94% 760.04 06/12/2030"
+    },
+    {
+     "doc": "batch_02/0014.eml#CDU-3051342.pdf",
+     "page": 1,
+     "quote": "USC1-INW1 CA24057121 Fuel surcharge 2,447.12 17.94% 439.01 10/12/2030"
+    },
+    {
+     "doc": "batch_02/0014.eml#CDU-3051342.pdf",
+     "page": 1,
+     "quote": "USC3-USE2 CA71329447 Security surcharge 489 kg 0.16 78.24 07/12/2030"
+    },
+    {
+     "doc": "batch_01/0003.eml#MSA-CDA-US-EXP-E91.pdf",
+     "page": 10,
+     "quote": "SEC Security surcharge 0.16 USD per chargeable kg"
+    },
+    {
+     "doc": "batch_02/0014.eml#CDU-3051342.pdf",
+     "page": 1,
+     "quote": "USC3-USE2 CA71329447 Delivery fee 1 shpt 52.70 52.70 07/12/2030"
+    },
+    {
+     "doc": "batch_01/0003.eml#MSA-CDA-US-EXP-E91.pdf",
+     "page": 10,
+     "quote": "DLV Delivery fee 52.70 USD per shipment"
+    },
+    {
+     "doc": "batch_02/0014.eml#CDU-3051342.pdf",
+     "page": 1,
+     "quote": "USE2-INS2 CA83887160 Security surcharge 316 kg 0.16 50.56 07/12/2030"
+    },
+    {
+     "doc": "batch_02/0014.eml#CDU-3051342.pdf",
+     "page": 1,
+     "quote": "USE2-INS2 CA83887160 Delivery fee 1 shpt 52.70 52.70 07/12/2030"
+    },
+    {
+     "doc": "batch_02/0014.eml#CDU-3051342.pdf",
+     "page": 1,
+     "quote": "USC3-USE2 CA37094535 Security surcharge 462 kg 0.16 73.92 06/12/2030"
+    },
+    {
+     "doc": "batch_02/0014.eml#CDU-3051342.pdf",
+     "page": 1,
+     "quote": "USC3-USE2 CA37094535 Delivery fee 1 shpt 52.70 52.70 06/12/2030"
+    },
+    {
+     "doc": "batch_02/0014.eml#CDU-3051342.pdf",
+     "page": 1,
+     "quote": "USC1-INW1 CA24057121 Security surcharge 338 kg 0.16 54.08 10/12/2030"
+    },
+    {
+     "doc": "batch_02/0014.eml#CDU-3051342.pdf",
+     "page": 1,
+     "quote": "USC1-INW1 CA24057121 Delivery fee 1 shpt 52.70 52.70 10/12/2030"
+    }
+   ],
+   "amount_usd": null,
+   "amount_range": null,
+   "deadline": null,
+   "missing_doc": null,
+   "supersedes": [],
+   "learned_at": null,
+   "invoice_id": "CDU-3051342"
+  },
+  {
+   "id": "overcharge:CDI-3031-0306",
+   "class": "overcharge",
+   "verdict": "finding",
+   "action": "draft:dispute",
+   "confidence": 0.9,
+   "evidence": [
+    {
+     "doc": "batch_02/0016.eml#CDI-3031-0306.pdf",
+     "page": 1,
+     "quote": "INE2-USW1 CA68214550 Air freight 274 kg 330.42 90,535.08 06/01/2031"
+    },
+    {
+     "doc": "batch_01/0001.eml#MSA-CDA-IN-EXP-E91.pdf",
+     "page": 8,
+     "quote": "INE2-USW1 100-299.5 kg 323.51 308.76"
+    },
+    {
+     "doc": "batch_01/0001.eml#MSA-CDA-IN-EXP-E91.pdf",
+     "page": 3,
+     "quote": "3.2 Pricing date. Each shipment is priced at the rates, surcharges and fees in force on its Pickup Date."
+    },
+    {
+     "doc": "batch_02/0022.eml#tracking-2030-09-01.xlsx",
+     "page": 1,
+     "quote": "CA68214550 | PICKED_UP | 2031-01-06 | INE2 | -"
+    },
+    {
+     "doc": "batch_02/0016.eml#CDI-3031-0306.pdf",
+     "page": 1,
+     "quote": "INE2-USW1 CA68214550 Fuel surcharge 90,535.08 25.33% 22,932.54 06/01/2031"
+    },
+    {
+     "doc": "batch_01/0001.eml#MSA-CDA-IN-EXP-E91.pdf",
+     "page": 3,
+     "quote": "4 Surcharges 4.1 Fuel surcharge. Fuel surcharge is the Annex C percentage for the month of the Pickup Date, applied to the base freight charge only."
+    },
+    {
+     "doc": "batch_02/0016.eml#CDI-3031-0306.pdf",
+     "page": 1,
+     "quote": "INE2-USW1 CA68214550 Security surcharge 274 kg 17.93 4,912.82 06/01/2031"
+    },
+    {
+     "doc": "batch_01/0001.eml#MSA-CDA-IN-EXP-E91.pdf",
+     "page": 10,
+     "quote": "SEC Security surcharge 17.93 INR per chargeable kg"
+    },
+    {
+     "doc": "batch_02/0016.eml#CDI-3031-0306.pdf",
+     "page": 1,
+     "quote": "INE2-USW1 CA68214550 Delivery fee 1 shpt 8644.00 8,644.00 06/01/2031"
+    },
+    {
+     "doc": "batch_01/0001.eml#MSA-CDA-IN-EXP-E91.pdf",
+     "page": 10,
+     "quote": "DLV Delivery fee 8644.00 INR per shipment"
+    }
+   ],
+   "amount_usd": "85.46",
+   "amount_range": null,
+   "deadline": null,
+   "missing_doc": null,
+   "supersedes": [],
+   "learned_at": null,
+   "invoice_id": "CDI-3031-0306"
+  },
+  {
+   "id": "overcharge:CDU-3151556",
+   "class": "overcharge",
+   "verdict": "no_finding",
+   "action": "none",
+   "confidence": 0.9,
+   "evidence": [
+    {
+     "doc": "batch_02/0017.eml#CDU-3151556.pdf",
+     "page": 1,
+     "quote": "USE2-INW1 CA51546405 Air freight 800 kg 4.86 3,888.00 07/01/2031"
+    },
+    {
+     "doc": "batch_01/0003.eml#MSA-CDA-US-EXP-E91.pdf",
+     "page": 8,
+     "quote": "USE2-INW1 300+ kg 4.56 4.86"
+    },
+    {
+     "doc": "batch_01/0003.eml#MSA-CDA-US-EXP-E91.pdf",
+     "page": 3,
+     "quote": "3.2 Pricing date. Each shipment is priced at the rates, surcharges and fees in force on its Pickup Date."
+    },
+    {
+     "doc": "batch_02/0022.eml#tracking-2030-09-01.xlsx",
+     "page": 1,
+     "quote": "CA51546405 | PICKED_UP | 2031-01-07 | USE2 | -"
+    },
+    {
+     "doc": "batch_02/0017.eml#CDU-3151556.pdf",
+     "page": 1,
+     "quote": "USE2-INW1 CA51546405 Fuel surcharge 3,888.00 19.78% 769.05 07/01/2031"
+    },
+    {
+     "doc": "batch_01/0003.eml#MSA-CDA-US-EXP-E91.pdf",
+     "page": 3,
+     "quote": "4 Surcharges 4.1 Fuel surcharge. Fuel surcharge is the Annex C percentage for the month of the Pickup Date, applied to the base freight charge only."
+    },
+    {
+     "doc": "batch_02/0017.eml#CDU-3151556.pdf",
+     "page": 1,
+     "quote": "USE2-INW1 CA51546405 Security surcharge 800 kg 0.16 128.00 07/01/2031"
+    },
+    {
+     "doc": "batch_01/0003.eml#MSA-CDA-US-EXP-E91.pdf",
+     "page": 10,
+     "quote": "SEC Security surcharge 0.16 USD per chargeable kg"
+    },
+    {
+     "doc": "batch_02/0017.eml#CDU-3151556.pdf",
+     "page": 1,
+     "quote": "USE2-INW1 CA51546405 Dangerous goods fee 1 shpt 155.65 155.65 07/01/2031"
+    },
+    {
+     "doc": "batch_01/0003.eml#MSA-CDA-US-EXP-E91.pdf",
+     "page": 10,
+     "quote": "DG Dangerous goods fee 155.65 USD per shipment"
+    },
+    {
+     "doc": "batch_02/0017.eml#CDU-3151556.pdf",
+     "page": 1,
+     "quote": "USE2-INW1 CA51546405 Delivery fee 1 shpt 52.70 52.70 07/01/2031"
+    },
+    {
+     "doc": "batch_01/0003.eml#MSA-CDA-US-EXP-E91.pdf",
+     "page": 10,
+     "quote": "DLV Delivery fee 52.70 USD per shipment"
+    }
+   ],
+   "amount_usd": null,
+   "amount_range": null,
+   "deadline": null,
+   "missing_doc": null,
+   "supersedes": [],
+   "learned_at": null,
+   "invoice_id": "CDU-3151556"
+  },
+  {
+   "id": "overcharge:CDU-3151564",
+   "class": "overcharge",
+   "verdict": "no_finding",
+   "action": "none",
+   "confidence": 0.9,
+   "evidence": [
+    {
+     "doc": "batch_02/0018.eml#CDU-3151564.pdf",
+     "page": 1,
+     "quote": "USC3-USE2 CA19434192 Air freight 264 kg 9.56 2,523.84 10/01/2031"
+    },
+    {
+     "doc": "batch_01/0003.eml#MSA-CDA-US-EXP-E91.pdf",
+     "page": 8,
+     "quote": "USC3-USE2 100-299.5 kg 8.97 9.56"
+    },
+    {
+     "doc": "batch_01/0003.eml#MSA-CDA-US-EXP-E91.pdf",
+     "page": 3,
+     "quote": "3.2 Pricing date. Each shipment is priced at the rates, surcharges and fees in force on its Pickup Date."
+    },
+    {
+     "doc": "batch_02/0022.eml#tracking-2030-09-01.xlsx",
+     "page": 1,
+     "quote": "CA19434192 | PICKED_UP | 2031-01-10 | USC3 | -"
+    },
+    {
+     "doc": "batch_02/0018.eml#CDU-3151564.pdf",
+     "page": 1,
+     "quote": "USC3-USE2 CA19434192 Fuel surcharge 2,523.84 19.78% 499.22 10/01/2031"
+    },
+    {
+     "doc": "batch_01/0003.eml#MSA-CDA-US-EXP-E91.pdf",
+     "page": 3,
+     "quote": "4 Surcharges 4.1 Fuel surcharge. Fuel surcharge is the Annex C percentage for the month of the Pickup Date, applied to the base freight charge only."
+    },
+    {
+     "doc": "batch_02/0018.eml#CDU-3151564.pdf",
+     "page": 1,
+     "quote": "USC3-USE2 CA19434192 Security surcharge 264 kg 0.16 42.24 10/01/2031"
+    },
+    {
+     "doc": "batch_01/0003.eml#MSA-CDA-US-EXP-E91.pdf",
+     "page": 10,
+     "quote": "SEC Security surcharge 0.16 USD per chargeable kg"
+    },
+    {
+     "doc": "batch_02/0018.eml#CDU-3151564.pdf",
+     "page": 1,
+     "quote": "USC3-USE2 CA19434192 Delivery fee 1 shpt 52.70 52.70 10/01/2031"
+    },
+    {
+     "doc": "batch_01/0003.eml#MSA-CDA-US-EXP-E91.pdf",
+     "page": 10,
+     "quote": "DLV Delivery fee 52.70 USD per shipment"
+    }
+   ],
+   "amount_usd": null,
+   "amount_range": null,
+   "deadline": null,
+   "missing_doc": null,
+   "supersedes": [],
+   "learned_at": null,
+   "invoice_id": "CDU-3151564"
+  },
+  {
+   "id": "overcharge:CDU-3151571",
+   "class": "overcharge",
+   "verdict": "no_finding",
+   "action": "none",
+   "confidence": 0.9,
+   "evidence": [
+    {
+     "doc": "batch_02/0020.eml#CDU-3151571.pdf",
+     "page": 1,
+     "quote": "USE2-INS2 CA59367494 Air freight 77 kg 6.78 522.06 27/01/2031"
+    },
+    {
+     "doc": "batch_01/0003.eml#MSA-CDA-US-EXP-E91.pdf",
+     "page": 8,
+     "quote": "USE2-INS2 45-99.5 kg 6.36 6.78"
+    },
+    {
+     "doc": "batch_01/0003.eml#MSA-CDA-US-EXP-E91.pdf",
+     "page": 3,
+     "quote": "3.2 Pricing date. Each shipment is priced at the rates, surcharges and fees in force on its Pickup Date."
+    },
+    {
+     "doc": "batch_02/0022.eml#tracking-2030-09-01.xlsx",
+     "page": 1,
+     "quote": "CA59367494 | PICKED_UP | 2031-01-27 | USE2 | -"
+    },
+    {
+     "doc": "batch_02/0020.eml#CDU-3151571.pdf",
+     "page": 1,
+     "quote": "USE2-INS2 CA59367494 Fuel surcharge 522.06 19.78% 103.26 27/01/2031"
+    },
+    {
+     "doc": "batch_01/0003.eml#MSA-CDA-US-EXP-E91.pdf",
+     "page": 3,
+     "quote": "4 Surcharges 4.1 Fuel surcharge. Fuel surcharge is the Annex C percentage for the month of the Pickup Date, applied to the base freight charge only."
+    },
+    {
+     "doc": "batch_02/0020.eml#CDU-3151571.pdf",
+     "page": 1,
+     "quote": "USE2-INS2 CA59367494 Security surcharge 77 kg 0.16 12.32 27/01/2031"
+    },
+    {
+     "doc": "batch_01/0003.eml#MSA-CDA-US-EXP-E91.pdf",
+     "page": 10,
+     "quote": "SEC Security surcharge 0.16 USD per chargeable kg"
+    },
+    {
+     "doc": "batch_02/0020.eml#CDU-3151571.pdf",
+     "page": 1,
+     "quote": "USE2-INS2 CA59367494 Delivery fee 1 shpt 52.70 52.70 27/01/2031"
+    },
+    {
+     "doc": "batch_01/0003.eml#MSA-CDA-US-EXP-E91.pdf",
+     "page": 10,
+     "quote": "DLV Delivery fee 52.70 USD per shipment"
+    }
+   ],
+   "amount_usd": null,
+   "amount_range": null,
+   "deadline": null,
+   "missing_doc": null,
+   "supersedes": [],
+   "learned_at": null,
+   "invoice_id": "CDU-3151571"
+  },
+  {
+   "id": "overcharge:CDU-3151580",
+   "class": "overcharge",
+   "verdict": "no_finding",
+   "action": "none",
+   "confidence": 0.9,
+   "evidence": [
+    {
+     "doc": "batch_02/0021.eml#CDU-3151580.pdf",
+     "page": 1,
+     "quote": "USE2-INS2 CA88008088 Air freight 30 kg 7.58 227.40 12/02/2031"
+    },
+    {
+     "doc": "batch_01/0003.eml#MSA-CDA-US-EXP-E91.pdf",
+     "page": 8,
+     "quote": "USE2-INS2 0-44.5 kg 7.11 7.58"
+    },
+    {
+     "doc": "batch_01/0003.eml#MSA-CDA-US-EXP-E91.pdf",
+     "page": 3,
+     "quote": "3.2 Pricing date. Each shipment is priced at the rates, surcharges and fees in force on its Pickup Date."
+    },
+    {
+     "doc": "batch_02/0022.eml#tracking-2030-09-01.xlsx",
+     "page": 1,
+     "quote": "CA88008088 | PICKED_UP | 2031-02-12 | USE2 | -"
+    },
+    {
+     "doc": "batch_02/0021.eml#CDU-3151580.pdf",
+     "page": 1,
+     "quote": "USE2-INS2 CA88008088 Fuel surcharge 227.40 20.79% 47.28 12/02/2031"
+    },
+    {
+     "doc": "batch_01/0003.eml#MSA-CDA-US-EXP-E91.pdf",
+     "page": 3,
+     "quote": "4 Surcharges 4.1 Fuel surcharge. Fuel surcharge is the Annex C percentage for the month of the Pickup Date, applied to the base freight charge only."
+    },
+    {
+     "doc": "batch_02/0021.eml#CDU-3151580.pdf",
+     "page": 1,
+     "quote": "USE2-INS2 CA88008088 Security surcharge 30 kg 0.16 4.80 12/02/2031"
+    },
+    {
+     "doc": "batch_01/0003.eml#MSA-CDA-US-EXP-E91.pdf",
+     "page": 10,
+     "quote": "SEC Security surcharge 0.16 USD per chargeable kg"
+    },
+    {
+     "doc": "batch_02/0021.eml#CDU-3151580.pdf",
+     "page": 1,
+     "quote": "USE2-INS2 CA88008088 Delivery fee 1 shpt 52.70 52.70 12/02/2031"
+    },
+    {
+     "doc": "batch_01/0003.eml#MSA-CDA-US-EXP-E91.pdf",
+     "page": 10,
+     "quote": "DLV Delivery fee 52.70 USD per shipment"
+    }
+   ],
+   "amount_usd": null,
+   "amount_range": null,
+   "deadline": null,
+   "missing_doc": null,
+   "supersedes": [],
+   "learned_at": null,
+   "invoice_id": "CDU-3151580"
+  }
+ ],
+ "portfolio": {
+  "cashback": [
+   {
+    "id": "cashback:CDA-IN-EXP-E91/2030-Q1/rebate",
+    "class": "cashback",
+    "verdict": "no_finding",
+    "action": "none",
+    "confidence": 0.8,
+    "evidence": [
+     {
+      "doc": "batch_01/0001.eml#MSA-CDA-IN-EXP-E91.pdf",
+      "page": 3,
+      "quote": "Qualifying Spend means freight charges (base freight, fuel, security surcharge and Annex D accessorials) on invoices dated in the period, net of all credit notes dated in the period whatever invoice they reference (rebate and improvement credits excepted)."
+     }
+    ],
+    "amount_usd": null,
+    "amount_range": null,
+    "deadline": null,
+    "missing_doc": null,
+    "supersedes": [],
+    "learned_at": null,
+    "contract_id": "CDA-IN-EXP-E91",
+    "period": "2030-Q1",
+    "credit_type": "rebate"
+   },
+   {
+    "id": "cashback:CDA-IN-EXP-E91/2030-Q3/rebate",
+    "class": "cashback",
+    "verdict": "no_finding",
+    "action": "none",
+    "confidence": 0.8,
+    "evidence": [
+     {
+      "doc": "batch_01/0001.eml#MSA-CDA-IN-EXP-E91.pdf",
+      "page": 3,
+      "quote": "Qualifying Spend means freight charges (base freight, fuel, security surcharge and Annex D accessorials) on invoices dated in the period, net of all credit notes dated in the period whatever invoice they reference (rebate and improvement credits excepted)."
+     }
+    ],
+    "amount_usd": null,
+    "amount_range": null,
+    "deadline": null,
+    "missing_doc": null,
+    "supersedes": [],
+    "learned_at": null,
+    "contract_id": "CDA-IN-EXP-E91",
+    "period": "2030-Q3",
+    "credit_type": "rebate"
+   },
+   {
+    "id": "cashback:CDA-US-EXP-E91/2030-Q2/rebate",
+    "class": "cashback",
+    "verdict": "no_finding",
+    "action": "none",
+    "confidence": 0.8,
+    "evidence": [
+     {
+      "doc": "batch_01/0003.eml#MSA-CDA-US-EXP-E91.pdf",
+      "page": 3,
+      "quote": "Qualifying Spend means freight charges (base freight, fuel, security surcharge and Annex D accessorials) on invoices dated in the period, net of all credit notes dated in the period whatever invoice they reference (rebate and improvement credits excepted)."
+     }
+    ],
+    "amount_usd": null,
+    "amount_range": null,
+    "deadline": null,
+    "missing_doc": null,
+    "supersedes": [],
+    "learned_at": null,
+    "contract_id": "CDA-US-EXP-E91",
+    "period": "2030-Q2",
+    "credit_type": "rebate"
+   },
+   {
+    "id": "cashback:CDA-US-EXP-E91/2030-Q3/rebate",
+    "class": "cashback",
+    "verdict": "finding",
+    "action": "draft:claim_credit",
+    "confidence": 0.8,
+    "evidence": [
+     {
+      "doc": "batch_01/0003.eml#MSA-CDA-US-EXP-E91.pdf",
+      "page": 3,
+      "quote": "Qualifying Spend means freight charges (base freight, fuel, security surcharge and Annex D accessorials) on invoices dated in the period, net of all credit notes dated in the period whatever invoice they reference (rebate and improvement credits excepted)."
+     }
+    ],
+    "amount_usd": "4307.34",
+    "amount_range": null,
+    "deadline": null,
+    "missing_doc": null,
+    "supersedes": [],
+    "learned_at": null,
+    "contract_id": "CDA-US-EXP-E91",
+    "period": "2030-Q3",
+    "credit_type": "rebate"
+   },
+   {
+    "id": "cashback:CDA-US-EXP-E91/2030-Q4/rebate",
+    "class": "cashback",
+    "verdict": "no_finding",
+    "action": "none",
+    "confidence": 0.8,
+    "evidence": [
+     {
+      "doc": "batch_01/0003.eml#MSA-CDA-US-EXP-E91.pdf",
+      "page": 3,
+      "quote": "Qualifying Spend means freight charges (base freight, fuel, security surcharge and Annex D accessorials) on invoices dated in the period, net of all credit notes dated in the period whatever invoice they reference (rebate and improvement credits excepted)."
+     }
+    ],
+    "amount_usd": null,
+    "amount_range": null,
+    "deadline": null,
+    "missing_doc": null,
+    "supersedes": [],
+    "learned_at": null,
+    "contract_id": "CDA-US-EXP-E91",
+    "period": "2030-Q4",
+    "credit_type": "rebate"
+   }
+  ],
+  "expiry": [
+   {
+    "id": "expiry:CDA-US-EXP-E91",
+    "class": "expiry",
+    "verdict": "finding",
+    "action": "internal:alert",
+    "confidence": 0.9,
+    "evidence": [
+     {
+      "doc": "batch_01/0003.eml#MSA-CDA-US-EXP-E91.pdf",
+      "page": 3,
+      "quote": "3.2 Pricing date. Each shipment is priced at the rates, surcharges and fees in force on its Pickup Date."
+     }
+    ],
+    "amount_usd": null,
+    "amount_range": null,
+    "deadline": "2031-04-01",
+    "missing_doc": null,
+    "supersedes": [],
+    "learned_at": null,
+    "contract_id": "CDA-US-EXP-E91"
+   }
+  ],
+  "late_fee_risk": [
+   {
+    "id": "late_fee_risk:CDU-3151571",
+    "class": "late_fee_risk",
+    "verdict": "finding",
+    "action": "internal:payment_reminder",
+    "confidence": 0.8,
+    "evidence": [
+     {
+      "doc": "batch_02/0023.eml#ap-register-2031-02-28.xlsx",
+      "page": 1,
+      "quote": "CDU-3151571 | 2031-02-08 | due 2031-03-10 | USD 690.34 | open | -"
+     },
+     {
+      "doc": "batch_01/0003.eml#MSA-CDA-US-EXP-E91.pdf",
+      "page": 4,
+      "quote": "10.2 Late fee. Undisputed amounts outstanding for more than 0 days past the due date incur a late fee of 1.49% per month or part thereof. days_late = paid date - due date; no fee is due if days_late <= 0; otherwise n = ceil(days_late / 30) fee months, each fee_i = 1.49% x base_i rounded to cents, base_i per clause 10.3."
+     },
+     {
+      "doc": "batch_02/0020.eml#CDU-3151571.pdf",
+      "page": 1,
+      "quote": "Caldrith Air Logistics Inc."
+     }
+    ],
+    "amount_usd": "10.29",
+    "amount_range": null,
+    "deadline": "2031-03-10",
+    "missing_doc": null,
+    "supersedes": [],
+    "learned_at": null,
+    "invoice_id": "CDU-3151571"
+   }
+  ]
+ }
+}

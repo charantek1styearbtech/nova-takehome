@@ -1,20 +1,19 @@
 # My solution
 
-Replace each prompt line (the ones starting with `>`) with your own words. This is the file a reviewer reads first,
-before running your code. The brief stays where it is, in README.md and BRIEF.pdf.
+A hybrid audit harness: deterministic parsing owns every number, the LLM is only used for semantics, classification of genuinely ambiguous documents, and reading scans. Every fact keeps a verbatim citation to the page it came from.
 
 ## How to run it
 
-> The commands, any setup beyond `make setup`, and anything the grader needs that isn't in `harness/requirements.txt`.
+Python 3.11+, then `make setup` (creates `.venv`, installs `harness/requirements.txt`). Nothing extra is required to grade. Point the harness at a model with `NOVA_LLM_API_KEY`, `NOVA_LLM_BASE_URL`, `NOVA_LLM_MODEL` (a gitignored `.env` holds a dev key; the grader's `ANTHROPIC_*` variables are honoured first when present). Then: `make grade` replays the practice mailbox into `report_card.txt`/`.json`; `make sheet` runs the exam mailbox into `out/exam_report.json` and `answer_sheet.json`; `make eval` runs the 15 golden cases into `evals/results.json`; `make validate` checks the repo is submission-ready. `python evals/build_mailboxes.py` regenerates the four from-scratch eval mailboxes if you want to rebuild them from source.
 
 ## What works
 
-> What your harness does well today, with your practice report card and your eval results.
+Practice grades **99.5/100**: detection F1 1.00, recovered $14,140.09 of $14,140.09 with $0.00 wrongly disputed, 11 of 11 adaptations, 3 of 3 learning checks, every hard gate clear, both modes 24/24 on gating, Brier 0.0231. On the unseen exam set the harness reports 12 findings, each hand-verified: three overcharges ($485.48, including one on a scanned invoice recovered through OCR), two waived-but-billed fees, a duplicate resubmission of an already-paid invoice ($3,235.24), a late fee not owed because a written extension moved the due date ($21.58), one amendment-vs-notice conflict escalated as a range ($0.00–$61.93), one cannot-determine asking for the missing Annex A rev 2, the Q3 volume rebate ($4,307.34, with tax, duty and late fees correctly excluded from qualifying spend), the US contract expiring 2031-04-01, and one late-fee risk due 2031-03-10 ($10.29). The 15-case eval suite passes end to end, covering INR-to-USD conversion, DD/MM advice layouts, duty disbursement rows, notice-beats-MSA precedence, waivers, feedback in both directions, autonomous-mode actions, and boundary days for expiry and cashback windows.
 
 ## What doesn't
 
-> What it gets wrong or skips, and anything we should know before we run it on our set.
+Contract-year (CY) credit periods are assumed closed when the report asks, rather than derived from invoice dates. The annual improvement-credit clauses parse into the contract record but no check consumes them — the practice and exam sets never bill one, so the logic is untested. Confidence weights are reasoned defaults, not fitted numbers, and AUROC is unmeasurable on a set with no mistakes. The local OCR fallback (RapidOCR) is a development convenience and is deliberately not in `requirements.txt`; in the grading environment vision comes from the model itself. Line regexes assume each charge row fits on one physical line — a wrapped two-line row is skipped as unverifiable rather than misread, which is the safe failure but could miss a finding on a badly wrapped invoice. The late-fee risk window is 14 days, chosen to match the practice examples.
 
 ## The eval case that caught a bug
 
-> Which case in `evals/` caught a real bug, what the bug was, and how you fixed it.
+`own_usd_advice_ddmm` exists because the exam exposed a real parsing bug: duty disbursement rows end with `-` in the collected-date column, and the original line regex rejected the whole row, silently dropping the line from the invoice. The fix was a date-tolerant line pattern plus a `_matched_line` cleanup that drops a date key that fails normalization; the case now pins that layout forever, alongside `own_inr_advice` for the INR conversion path. Beyond that, the suite was proven to catch regressions by deliberately breaking it: recomputing fuel on the billed freight base instead of the correct base (`analyze.py`, fuel pass) turned 8 of 15 cases red — `own_inr_advice` reported 146.71 against an expected 62.47, `own_usd_advice_ddmm` 210.59 against 74.97, `own_notice_beats_msa` 252.59 against 124.95, and both shipped samples failed too — while the boundary, waiver and feedback cases stayed green, showing the failures land exactly where the broken math lives. Reverting the line restored 15 of 15.

@@ -1,0 +1,12 @@
+name: feedback that should not change an answer - it closes a different invoice
+mailbox: evals/mailboxes/usd_advice
+as_of: '2030-08-31'
+mode: supervised
+feedback: {batch_01: evals/feedback/close_other_key.json}
+expect:
+  key: {invoice_id: NFR-10023, class: overcharge}
+  verdict: finding
+  amount_usd: '74.97'
+  action: draft:dispute
+why: the feedback closes overcharge:NFR-88420, an invoice this mailbox never saw; NFR-10023
+  is a different key and must stay a finding at the full 74.97.

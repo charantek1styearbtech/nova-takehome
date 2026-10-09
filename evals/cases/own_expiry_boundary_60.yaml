@@ -1,0 +1,10 @@
+name: expiry fires on the exact last day of the 60-day window
+mailbox: data/examples/expiry/docs
+as_of: '2034-01-19'
+mode: supervised
+expect:
+  key: {contract_id: TBX-US-EXP-E24, class: expiry}
+  verdict: finding
+  action: internal:alert
+why: the contract ends 2034-03-20; as_of is exactly 60 days earlier, the last date the
+  0..60 window covers, so the portfolio must still alert.

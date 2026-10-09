@@ -1,0 +1,11 @@
+name: conflict between amendment and notice escalates in autonomous mode too
+mailbox: data/examples/conflict/docs
+as_of: '2032-11-30'
+mode: autonomous
+expect:
+  key: {invoice_id: TX-US-2032-5166, class: overcharge}
+  verdict: conflict
+  amount_range: ['0.00', '20.87']
+  action: escalate
+why: two sources with equal authority disagree; no amount is defensible, so even autonomous
+  mode must escalate instead of picking a side or executing anything.

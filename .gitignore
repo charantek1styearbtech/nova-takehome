@@ -1,6 +1,9 @@
 .venv/
 .state/
+.state_*/
 out/state_*/
+out_*.json
+report_check.json
 __pycache__/
 .env
 *.pyc

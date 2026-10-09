@@ -1,0 +1,11 @@
+name: USD charges advice in a DD/MM layout with a duty disbursement row that ends in a dash
+mailbox: evals/mailboxes/usd_advice
+as_of: '2030-08-31'
+mode: supervised
+expect:
+  key: {invoice_id: NFR-10023, class: overcharge}
+  verdict: finding
+  amount_usd: '74.97'
+  action: draft:dispute
+why: freight billed 6.85 vs P1 6.40 USD/kg on 140 kg plus the fuel effect (63.00 + 11.97);
+  the import-duty row has no collected date and must parse without breaking the total.

@@ -1,0 +1,11 @@
+name: waived delivery fee billed anyway; every other line repriced cleanly
+mailbox: evals/mailboxes/usd_waiver
+as_of: '2030-08-31'
+mode: supervised
+expect:
+  key: {invoice_id: NFR-10031, class: waived_but_billed}
+  verdict: finding
+  amount_usd: '48.00'
+  action: draft:dispute
+why: a Schedule-1 sender waived the Delivery fee on waybill NF88231100 for 2030-07 yet the
+  advice bills 48.00; the freight and fuel lines are correct, so the overcharge key is absent.

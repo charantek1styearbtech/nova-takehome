@@ -1,0 +1,99 @@
+{
+ "harness": "harness/harness.py",
+ "passed": 15,
+ "total": 15,
+ "your_cases": 13,
+ "score": 1.0,
+ "cases": [
+  {
+   "case": "own_autonomous_execute.yaml",
+   "name": "autonomous mode sends a small clean overcharge straight to dispute",
+   "pass": true,
+   "diff": []
+  },
+  {
+   "case": "own_cashback_closes.yaml",
+   "name": "cashback reported the day the quarter closes, tracked not claimed",
+   "pass": true,
+   "diff": []
+  },
+  {
+   "case": "own_cashback_open_period.yaml",
+   "name": "cashback period still open - spend exists but the quarter has not closed",
+   "pass": true,
+   "diff": []
+  },
+  {
+   "case": "own_conflict_autonomous.yaml",
+   "name": "conflict between amendment and notice escalates in autonomous mode too",
+   "pass": true,
+   "diff": []
+  },
+  {
+   "case": "own_expiry_boundary_60.yaml",
+   "name": "expiry fires on the exact last day of the 60-day window",
+   "pass": true,
+   "diff": []
+  },
+  {
+   "case": "own_expiry_past_window.yaml",
+   "name": "one day outside the expiry window - no alert at 61 days",
+   "pass": true,
+   "diff": []
+  },
+  {
+   "case": "own_feedback_closes_key.yaml",
+   "name": "feedback that should change an answer - AP closed exactly this dispute",
+   "pass": true,
+   "diff": []
+  },
+  {
+   "case": "own_feedback_scoped_other.yaml",
+   "name": "feedback that should not change an answer - it closes a different invoice",
+   "pass": true,
+   "diff": []
+  },
+  {
+   "case": "own_inr_advice.yaml",
+   "name": "INR charges advice in a DD/MM layout, repriced and converted to USD",
+   "pass": true,
+   "diff": []
+  },
+  {
+   "case": "own_late_fee_autonomous.yaml",
+   "name": "late fee not owed in autonomous mode - disputed without a human",
+   "pass": true,
+   "diff": []
+  },
+  {
+   "case": "own_notice_beats_msa.yaml",
+   "name": "a Schedule-1 rate notice beats the MSA table for the pickup window",
+   "pass": true,
+   "diff": []
+  },
+  {
+   "case": "own_usd_advice_ddmm.yaml",
+   "name": "USD charges advice in a DD/MM layout with a duty disbursement row that ends in a dash",
+   "pass": true,
+   "diff": []
+  },
+  {
+   "case": "own_waiver_still_billed.yaml",
+   "name": "waived delivery fee billed anyway; every other line repriced cleanly",
+   "pass": true,
+   "diff": []
+  },
+  {
+   "case": "sample_conflict.yaml",
+   "name": "amendment and rate notice disagree",
+   "pass": true,
+   "diff": []
+  },
+  {
+   "case": "sample_overcharge.yaml",
+   "name": "wrong rate on one freight line",
+   "pass": true,
+   "diff": []
+  }
+ ]
+}

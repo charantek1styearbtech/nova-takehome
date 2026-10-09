@@ -1,0 +1,11 @@
+name: autonomous mode sends a small clean overcharge straight to dispute
+mailbox: evals/mailboxes/usd_advice
+as_of: '2030-08-31'
+mode: autonomous
+expect:
+  key: {invoice_id: NFR-10023, class: overcharge}
+  verdict: finding
+  amount_usd: '74.97'
+  action: execute:dispute
+why: the amount is far below the 5,000 unattended threshold and every citation resolves, so
+  autonomous mode must act on its own rather than drafting for review.
