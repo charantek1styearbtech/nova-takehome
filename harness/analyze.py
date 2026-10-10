@@ -1,11 +1,4 @@
-"""Layer 3: universal docs -> report.json.
-
-Deterministic arithmetic on top of what understand.py extracted. One item per finding key.
-Verdicts: finding | no_finding | conflict | cannot_determine.
-Only 'finding' counts in totals. ~25% of every set is clean — leave those no_finding or out.
-
-Rounding: half up to cents, ties away from zero (Decimal, ROUND_HALF_UP). Nothing else rounded.
-"""
+"""Layer 3: structured documents -> report.json. Deterministic checks, one item per finding key."""
 from __future__ import annotations
 
 import re
@@ -13,7 +6,6 @@ from datetime import date, datetime, timedelta
 from decimal import Decimal, ROUND_HALF_UP
 
 
-# ---- money helpers ----------------------------------------------------------------------------------------------------
 def _d(x) -> Decimal:
     return Decimal(str(x))
 
@@ -28,8 +20,7 @@ def usd(x) -> str:
 
 
 def _amount_usd(inv: dict, contract: dict, value) -> str | None:
-    """USD string for an amount in the invoice's currency (Annex F, month of invoice date).
-    Returns None when the contract holds no Annex F row for that month (caller must not invent)."""
+    """USD amount for a foreign-currency invoice via the contract's FX table."""
     if (inv.get("currency") or "USD") != "INR":
         return usd(value)
     fx = contract.get("fx_inr_per_usd_by_month") or {}
@@ -59,7 +50,6 @@ def _date(s) -> date | None:
         return None
 
 
-# ---- item builders ----------------------------------------------------------------------------------------------------
 def item(id_: str, cls: str, verdict: str, action: str, confidence: float,
          evidence: list[dict], *, invoice_id=None, contract_id=None, period=None,
          credit_type=None, amount=None, amount_range=None, deadline=None,
@@ -81,7 +71,6 @@ def item(id_: str, cls: str, verdict: str, action: str, confidence: float,
         it["credit_type"] = credit_type
     if variant:
         it["variant"] = variant
-    # drop nulls except the ones the schema wants present
     return it
 
 
@@ -89,7 +78,6 @@ def ev(doc: str, page: int, quote: str) -> dict:
     return {"doc": doc, "page": page, "quote": quote}
 
 
-# ---- index the universe ------------------------------------------------------------------------------------------------
 class Universe:
     """All documents received by as_of, indexed for the checks."""
 
@@ -118,7 +106,6 @@ class Universe:
                 self.emails.append(d)
             elif t == "declaration":
                 self.declarations.append(d)
-        # one finding key per identity: the same invoice/contract delivered twice counts once
         self.invoices = _dedupe(self.invoices, lambda d: d.get("invoice_id") or d.get("doc_id"))
         self.credits = _dedupe(self.credits, lambda d: d.get("invoice_id") or d.get("doc_id"))
         self.contracts = _dedupe(self.contracts, lambda d: d.get("contract_id") or d.get("doc_id"))
@@ -192,7 +179,6 @@ def _row_ev(u: Universe, row: dict) -> dict:
     return ev(row.get("_doc") or "", 1, row.get("raw") or "")
 
 
-# ---- report -----------------------------------------------------------------------------------------------------------
 def build_report(docs: list[dict], as_of: str, mode: str, facts: list[dict],
                  closed_keys: dict | None = None, learned: dict | None = None) -> dict:
     closed_keys = closed_keys or {}
@@ -221,7 +207,6 @@ def build_report(docs: list[dict], as_of: str, mode: str, facts: list[dict],
     return report
 
 
-# ---- per-invoice checks ------------------------------------------------------------------------------------------------
 def check_invoice(inv: dict, u: Universe, mode: str, facts: list[dict],
                   closed: dict, learned: dict) -> list[dict]:
     """All four invoice classes for this invoice. Returns items."""
@@ -232,7 +217,7 @@ def check_invoice(inv: dict, u: Universe, mode: str, facts: list[dict],
     base_key = f"{iid}"
 
     if _closed(closed, iid, "overcharge"):
-        pass  # still emit? no: closed keys stop being raised
+        pass
     else:
         it = check_overcharge(inv, u, mode, facts, learned)
         if it:
@@ -260,27 +245,19 @@ def _closed(closed: dict, invoice_id: str, cls: str) -> bool:
             or invoice_id in closed)
 
 
-# ---- class 1: overcharge ----------------------------------------------------------------------------------------------
 FREIGHT_OK = re.compile(r"freight", re.I)
 FUEL_OK = re.compile(r"\bfuel\b|fsc\b", re.I)
 
 
 def reprice_lines(inv: dict, contract: dict | None, u: Universe,
                   override: tuple | None = None) -> list[dict]:
-    """Reprice every line we can verify: freight (contract rate x weight), fuel (Annex C % of
-    correct freight), security and other accessorials (Annex D per shipment/per chargeable kg).
-    Lines we can't price are skipped (never invent findings).
-
-    override = (lane, rate, min_charge, evidence) forces that lane's freight to a notice rate.
-    -> [{"line", "billed", "correct", "evidence": [ev, ...]}]
-    """
+    """Reprice verifiable lines (freight, fuel, accessorials) against the contract; skip what we can't price."""
     out: list[dict] = []
     if contract is None:
         return out
     lines = inv.get("lines") or []
     correct_freight: dict[str, Decimal] = {}
 
-    # pass 1: freight lines (fuel needs the correct base)
     for l in lines:
         desc = str(l.get("desc") or "")
         if not (FREIGHT_OK.search(desc) and not FUEL_OK.search(desc)):
@@ -300,7 +277,7 @@ def reprice_lines(inv: dict, contract: dict | None, u: Universe,
             continue
         qty = _line_qty(l)
         if qty <= 0:
-            continue  # no weight: can't verify a per-kg rate or its minimum
+            continue
         correct = r2(rate * qty)
         if min_charge is not None and min_charge > correct:
             correct = min_charge
@@ -317,7 +294,6 @@ def reprice_lines(inv: dict, contract: dict | None, u: Universe,
         out.append({"line": l, "billed": _d(l.get("amount") or 0),
                     "correct": correct, "evidence": evid})
 
-    # pass 2: fuel (percentage of the CORRECT base freight, Annex C month of pickup)
     for l in lines:
         desc = str(l.get("desc") or "")
         if not FUEL_OK.search(desc):
@@ -337,12 +313,10 @@ def reprice_lines(inv: dict, contract: dict | None, u: Universe,
         out.append({"line": l, "billed": _d(l.get("amount") or 0),
                     "correct": correct, "evidence": evid})
 
-    # pass 3: security + other accessorials from Annex D (per shipment / per chargeable kg)
     for l in lines:
         desc = str(l.get("desc") or "")
         if not desc.strip() or FUEL_OK.search(desc) or FREIGHT_OK.search(desc):
             continue
-        # dangerous goods fee: not owed when the DGD shows dry ice as refrigerant only
         if re.search(r"dangerous goods|\bDG\b|\bdg\b| hazmat", desc, re.I):
             dgd = _dry_ice_only(u, l.get("awb") or "")
             if dgd is not None:
@@ -362,12 +336,11 @@ def reprice_lines(inv: dict, contract: dict | None, u: Universe,
         evid = [_line_ev(inv, l.get("raw", ""))]
         if acc.get("quote"):
             evid.append(ev(contract["doc_id"], int(acc.get("page", 1)), acc["quote"]))
-        # seasonal surcharge (e.g. peak season): not owed outside its months
         season = acc.get("season")
         if season:
             pu = u.pickup_date(l.get("awb") or "", l.get("date"))
             if not pu:
-                continue  # can't place the pickup in time: never invent a finding
+                continue
             mo = int(pu[5:7]) if len(pu) >= 7 else 0
             start, end = season
             in_season = (start <= mo <= end) if start <= end else (mo >= start or mo <= end)
@@ -379,10 +352,10 @@ def reprice_lines(inv: dict, contract: dict | None, u: Universe,
         basis = str(acc.get("basis", "")).lower()
         if "kg" in basis or "day" in basis:
             if qty <= 0:
-                continue  # per-unit fee without a quantity: unverifiable, never invent
-            correct = r2(_d(acc["fee"]) * qty)  # per chargeable kg / per storage day
+                continue
+            correct = r2(_d(acc["fee"]) * qty)
         else:
-            correct = r2(acc["fee"])  # per shipment etc.
+            correct = r2(acc["fee"])
         out.append({"line": l, "billed": _d(l.get("amount") or 0),
                     "correct": correct, "evidence": evid})
     return out
@@ -446,7 +419,6 @@ def _accessorial(contract: dict, desc: str) -> dict | None:
             continue
         if name in d or d in name:
             return v
-    # Annex E: any billed label for an Annex D code prices like the Annex D name
     for a, canon in aliases.items():
         if a and canon in acc and (a in d or d in a):
             return acc[canon]
@@ -488,9 +460,8 @@ def check_overcharge(inv: dict, u: Universe, mode: str, facts: list[dict],
     if not lines:
         return None
     if not u.contracts:
-        return None  # nothing held: never price from thin air
+        return None
 
-    # a held document points at an annex revision that never arrived -> ask for it
     miss = _missing_named_annex(u, lines)
     if miss:
         return item(
@@ -510,12 +481,10 @@ def check_overcharge(inv: dict, u: Universe, mode: str, facts: list[dict],
     lane = lines[0].get("lane") or ""
     pickup = u.pickup_date(lines[0].get("awb", ""), lines[0].get("date"))
 
-    # rate sources in force: a Schedule-1 rate notice (or feedback-accepted one) and a signed
-    # amendment can both apply to this pickup; a feedback precedence fact picks a side.
     pf = _precedence_fact(facts, contract, lane)
     notice_e, n = _valid_notice(u, contract, lane, pickup, facts, pf)
     if pf is not None and "notice" not in str(pf.get("use") or "").lower():
-        notice_e, n = None, None  # feedback resolved the conflict against the notice
+        notice_e, n = None, None
     notice_rate = _notice_band_rate(n, lines[0]) if n else None
     amend_rate, amend_ev, am_doc = _amendment_rate(contract, lines[0], u, pickup)
 
@@ -526,7 +495,7 @@ def check_overcharge(inv: dict, u: Universe, mode: str, facts: list[dict],
 
     priced = reprice_lines(inv, contract, u, override)
     if not priced:
-        return None  # nothing verifiable: don't invent a finding
+        return None
 
     evidence: list[dict] = []
     billed = Decimal("0")
@@ -536,8 +505,6 @@ def check_overcharge(inv: dict, u: Universe, mode: str, facts: list[dict],
             if e not in evidence and e.get("quote"):
                 evidence.append(e)
 
-    # conflict: signed amendment + authorized notice both in force on this pickup, disagreeing,
-    # and the amount at stake differs between them
     if (notice_e is not None and notice_rate is not None
             and amend_rate is not None and notice_rate != amend_rate):
         t_n = sum((p["correct"] for p in priced), Decimal("0"))
@@ -680,7 +647,7 @@ def _valid_notice(u: Universe, contract: dict, lane: str, pickup: str | None,
     cid = contract.get("contract_id")
     accepted = _accepted_fact(facts, contract, lane, pickup)
     if accepted is None and pf is not None and "notice" in str(pf.get("use") or "").lower():
-        accepted = pf  # feedback resolved in the notice's favour: treat it as the rate
+        accepted = pf
     for e in u.emails:
         n = e.get("rate_notice") or {}
         if n.get("lane") != lane:
@@ -754,11 +721,11 @@ def _missing_named_annex(u: Universe, lines: list[dict]) -> dict | None:
             if not want or not na.get("lanes"):
                 continue
             if any(want in h for h in held):
-                continue  # that revision IS in the mailbox
+                continue
             if lane and lane not in na["lanes"]:
                 continue
             if na.get("applies_from") and pickup and pickup < na["applies_from"]:
-                continue  # before the replacement took effect: old rates govern
+                continue
             return {"doc": c.get("doc_id"), "page": int(na.get("page", 1)),
                     "quote": na.get("quote") or "",
                     "missing": {"name": name, "holder": _rates_contact(u)}}
@@ -801,7 +768,6 @@ def _governing_contract(u: Universe, lines: list[dict]) -> dict | None:
         base = bases[0] if bases else (u.contracts[0] if u.contracts else None)
     if base is None:
         return None
-    # attach amendments for the same base contract (later amendment wins for the same lane)
     amds = [c for c in u.contracts
             if (c.get("is_amendment") or c.get("doc_type") == "amendment")
             and (c.get("base_contract_id") or "") in ("", base.get("contract_id"))]
@@ -820,13 +786,11 @@ def _correct_rate(contract: dict, line: dict, u: Universe,
     origin, _, dest = lane.partition("-")
     weight = _d(line.get("qty") or 0)
 
-    # feedback: a resolved precedence tells us which source to use
     forced = None
     for f in contract.get("_facts", []) or []:
         if f.get("fact_type") == "precedence" and f.get("contract_id") == contract.get("contract_id"):
             if f.get("lane") in (None, lane):
                 forced = f.get("use")
-    # later amendment first (only if in force at pickup), then MSA rates
     candidates: list[tuple[str, dict]] = []
     for am in reversed(contract.get("amendments") or []):
         if pickup and am.get("effective_date") and pickup < am["effective_date"]:
@@ -854,12 +818,10 @@ def _correct_rate(contract: dict, line: dict, u: Universe,
     return None, None
 
 
-# ---- class 2: duplicate ------------------------------------------------------------------------------------------------
 def check_duplicate(inv: dict, u: Universe, mode: str, learned: dict) -> dict | None:
     iid = inv["invoice_id"]
     row = u.register_row(iid)
     evidence = []
-    # same invoice number resent: ledger shows paid/scheduled AND resend asks again
     resends = [e for e in u.emails
                if iid in (e.get("mentions", {}) or {}).get("invoice_ids", [])
                and e.get("asks_for_payment")]
@@ -877,7 +839,6 @@ def check_duplicate(inv: dict, u: Universe, mode: str, learned: dict) -> dict | 
             return item(f"duplicate:{iid}", "duplicate", "finding", action, 0.9,
                         evidence, invoice_id=iid, amount=usd(amount),
                         learned_at=learned.get(f"duplicate:{iid}"))
-    # two invoice numbers, same shipment lines -> flag the later invoice date
     same_ship = _same_shipment_twice(inv, u)
     if same_ship:
         other_inv, quote = same_ship
@@ -900,7 +861,7 @@ def _same_shipment_twice(inv: dict, u: Universe):
 
     inv_awbs = awbs(inv)
     if not inv_awbs:
-        return None  # no shipment on the document: nothing to double-bill
+        return None
     for other in u.invoices:
         if other["invoice_id"] == inv["invoice_id"]:
             continue
@@ -918,11 +879,9 @@ def _overlapped_lines(inv: dict, other: dict) -> Decimal:
         for o in other_by_awb.get(l.get("awb"), []):
             if abs(float(l.get("amount") or 0) - float(o.get("amount") or 0)) < 0.005:
                 total += _d(l["amount"])
-    # subtract any credit covering the overlap
     return total
 
 
-# ---- class 3: waived but billed ---------------------------------------------------------------------------------------
 def check_waived(inv: dict, u: Universe, mode: str, facts: list[dict],
                  learned: dict) -> dict | None:
     iid = inv["invoice_id"]
@@ -956,7 +915,6 @@ def check_waived(inv: dict, u: Universe, mode: str, facts: list[dict],
 def _waiver_covers(email_doc: dict, wl: dict, u: Universe, facts: list[dict]) -> bool | None:
     """True = authority + scope OK; False = not authoritative; None = quoted-only -> cannot_determine."""
     sender = email_doc.get("sender_email", "")
-    # feedback facts: sender_authority / waiver_scope
     for f in facts:
         if f.get("fact_type") == "sender_authority" and f.get("person_email") == sender:
             if f.get("valid_from") and str(f["valid_from"]) > (email_doc.get("received_date") or ""):
@@ -995,24 +953,20 @@ def _line_matches_waiver(line: dict, wl: dict) -> bool:
     return True
 
 
-# ---- class 4: late fee not owed ---------------------------------------------------------------------------------------
 def check_late_fee_not_owed(inv: dict, u: Universe, mode: str, facts: list[dict],
                             learned: dict) -> dict | None:
     """A late fee billed on an invoice that was actually paid on time (or fee is wrong)."""
-    # find late-fee lines on this invoice
     fee_lines = [l for l in inv.get("lines", [])
                  if "late fee" in (l.get("desc") or "").lower()]
     if not fee_lines:
         return None
     for fl in fee_lines:
-        # which invoice does this fee reference?
         m = _target_invoice(fl)
         if not m:
             continue
         target_row = u.register_row(m)
         if not target_row:
             return None
-        # effective due date (extension emails, from authorised sender)
         eff_due = _effective_due_date(m, target_row, u, facts)
         paid = target_row.get("paid_date")
         if not paid or not eff_due:
@@ -1021,13 +975,12 @@ def check_late_fee_not_owed(inv: dict, u: Universe, mode: str, facts: list[dict]
         contract = _contract_for(u, inv.get("contract_ref"))
         grace = _grace_days(u, inv.get("contract_ref"))
         if days_late <= grace:
-            # fee not owed -> whole fee line is the finding
             amount = _d(fl.get("amount") or 0)
             if amount <= 0:
                 continue
             amt = _amount_usd(inv, contract or {}, amount)
             if amt is None:
-                continue  # invoice currency unconvertible: never invent an amount
+                continue
             evidence = [
                 page_ev(inv, fl.get("raw", "")),
                 _row_ev(u, target_row),
@@ -1050,7 +1003,6 @@ def _target_invoice(fee_line: dict) -> str | None:
     m = re.search(r"([A-Z]{2,4}-?[A-Z]{0,4}-?\d{4}-?\d{3,})", raw)
     if m:
         return m.group(1).replace(" ", "").replace(":", "").replace("#", "")
-    # slash-shaped ids: "Late fee on TXI/35-36/0021"
     m = re.search(r"\b([A-Z][A-Z0-9]*(?:/[A-Z0-9]+)+)\b", raw)
     return m.group(1) if m else None
 
@@ -1098,11 +1050,9 @@ def _grace_days(u: Universe, ref: str | None = None) -> int:
     return 0
 
 
-# ---- late fee risk (portfolio) ----------------------------------------------------------------------------------------
 def check_late_fee_risk(u: Universe, as_of: str, mode: str,
                         findings: list[dict] | None = None) -> list[dict]:
-    """A fee will start accruing on an unpaid invoice due within 14 days: warn now.
-    Driven by the AP register (the source of truth for due dates and open amounts)."""
+    """Warn when an unpaid register invoice is due within 14 days (the fee starts accruing)."""
     out = []
     as_of_d = _date(as_of)
     if not as_of_d:
@@ -1116,7 +1066,6 @@ def check_late_fee_risk(u: Universe, as_of: str, mode: str,
         if q:
             clause = q
             break
-    # amounts we already disputed on an invoice reduce the at-risk principal
     disputed: dict[str, Decimal] = {}
     for it in findings or []:
         if it.get("verdict") == "finding" and it.get("invoice_id"):
@@ -1148,7 +1097,7 @@ def check_late_fee_risk(u: Universe, as_of: str, mode: str,
                 fx = (contract or {}).get("fx_inr_per_usd_by_month") or {}
                 fxr = fx.get((inv.get("invoice_date") or "")[:7])
                 if not fxr:
-                    continue  # can't express the exposure in USD: don't invent
+                    continue
                 principal = r2(principal / _d(fxr))
             principal = max(Decimal("0"), principal - disputed.get(iid, Decimal("0")))
             if principal <= 0:
@@ -1184,7 +1133,6 @@ def _late_fee_rate(u: Universe, ref: str | None = None) -> float:
     return 0.0
 
 
-# ---- class 6: cashback ------------------------------------------------------------------------------------------------
 def check_cashback(contract: dict, u: Universe, as_of: str, mode: str, facts: list[dict],
                    closed: dict, learned: dict) -> list[dict]:
     out: list[dict] = []
@@ -1192,11 +1140,10 @@ def check_cashback(contract: dict, u: Universe, as_of: str, mode: str, facts: li
     if not cid:
         return out
     if contract.get("is_amendment") or contract.get("doc_type") == "amendment":
-        return out  # the MSA carries the rebate clause
+        return out
     tiers = contract.get("rebate_tiers") or []
     if not tiers:
         return out
-    # group THIS contract's invoices by quarter (never another party's spend)
     by_period: dict[str, Decimal] = {}
     for inv in u.invoices:
         if not _invoice_matches_contract(inv, contract):
@@ -1211,10 +1158,10 @@ def check_cashback(contract: dict, u: Universe, as_of: str, mode: str, facts: li
     as_of_d = _date(as_of)
     for period, qs in sorted(by_period.items()):
         if not _period_closed(period, as_of_d):
-            continue  # only report once the period has closed
+            continue
         key = f"cashback:{cid}/{period}/rebate"
         if key in closed:
-            continue  # feedback closed this key: stop raising it
+            continue
         evidence = []
         q_ev = _contract_quote(contract, "qualifying_spend")
         if q_ev:
@@ -1231,7 +1178,7 @@ def check_cashback(contract: dict, u: Universe, as_of: str, mode: str, facts: li
             out.append(item(key, "cashback", "no_finding", "none", 0.8, evidence,
                             contract_id=cid, period=period, credit_type="rebate",
                             learned_at=learned.get(key)))
-            continue  # below the lowest tier: no rebate earned
+            continue
         owed = r2(qs * _d(tier["percent"]) / Decimal("100"))
         credited = _rebate_credits(u, cid, period)
         net = owed - credited
@@ -1239,7 +1186,7 @@ def check_cashback(contract: dict, u: Universe, as_of: str, mode: str, facts: li
             out.append(item(key, "cashback", "no_finding", "none", 0.8, evidence,
                             contract_id=cid, period=period, credit_type="rebate",
                             learned_at=learned.get(key)))
-            continue  # already credited in full
+            continue
         due = _credit_due(period)
         action = ("draft:claim_credit" if (as_of_d and as_of_d >= due)
                   else "internal:track_credit")
@@ -1260,10 +1207,10 @@ def _invoice_matches_contract(inv: dict, contract: dict) -> bool:
         return ref == cid or ref == (contract.get("base_contract_id") or "")
     clanes = {f"{x.get('origin')}-{x.get('destination')}" for x in contract.get("lanes") or []}
     if not clanes:
-        return True  # single-contract sets: no lanes to separate by
+        return True
     ilanes = {l.get("lane") for l in inv.get("lines") or [] if l.get("lane")}
     if not ilanes:
-        return False  # can't attribute: never claim someone else's spend
+        return False
     return bool(ilanes & clanes)
 
 
@@ -1279,11 +1226,10 @@ def _period_closed(period: str, as_of: date | None) -> bool:
         y, q = period.split("-Q")
         end_month = int(q) * 3
         last = date(int(y), end_month, 1)
-        # last day of the quarter's final month
         nxt = date(int(y) + (end_month == 12), (end_month % 12) + 1, 1)
         return as_of >= (nxt - timedelta(days=1))
     if period.startswith("CY"):
-        return True  # contract-year credits: assume closed when the report asks
+        return True
     return False
 
 
@@ -1311,7 +1257,7 @@ def _qualifying_spend(inv: dict, contract: dict) -> Decimal:
         fx = contract.get("fx_inr_per_usd_by_month") or {}
         rate = fx.get((inv.get("invoice_date") or "")[:7])
         if not rate:
-            return Decimal("0")  # no Annex F row: cannot convert, never invent spend
+            return Decimal("0")
         total = r2(total / _d(rate))
     return total
 
@@ -1355,7 +1301,6 @@ def _contract_quote(contract: dict, key: str) -> dict | None:
     return None
 
 
-# ---- class 7: expiry --------------------------------------------------------------------------------------------------
 def check_expiry(contract: dict, as_of: str, learned: dict) -> list[dict]:
     cid = contract.get("contract_id")
     if not cid:
@@ -1364,7 +1309,6 @@ def check_expiry(contract: dict, as_of: str, learned: dict) -> list[dict]:
     as_of_d = _date(as_of)
     if not as_of_d:
         return []
-    # operative date: end date, or notice deadline when the contract renews itself
     if ex.get("auto_renews") and ex.get("notice_deadline"):
         deadline = ex.get("notice_deadline")
     else:
@@ -1384,7 +1328,6 @@ def check_expiry(contract: dict, as_of: str, learned: dict) -> list[dict]:
                  learned_at=learned.get(f"expiry:{cid}"))]
 
 
-# ---- shared helpers ---------------------------------------------------------------------------------------------------
 def iid_doc_of(inv: dict) -> str:
     return inv.get("source_email") or inv.get("doc_id", "")
 
@@ -1427,7 +1370,7 @@ def _outbound_action(draft: str, execute: str, amount, mode: str) -> str:
     amt = _d(amount)
     if mode == "supervised":
         return "human_review" if amt >= Decimal("5000") else draft
-    # autonomous: all five checks would be verified; threshold is one of them
     if amt >= Decimal("5000"):
         return "human_review"
     return execute
+

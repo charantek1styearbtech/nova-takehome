@@ -1,14 +1,4 @@
-"""Disk state under --state-dir. The process restarts between batches, so everything needed by
-a later `report` or `feedback` call lives here as JSON.
-
-Layout inside <state-dir>:
-    docs/<safe_doc_id>.json   one file per extracted document (universal schema, see understand.py)
-    docs_index.json           {doc_id: received_date} for the as_of filter
-    facts.json                feedback-derived facts (standing + one_off), applied by later reports
-    closed_keys.json          keys a person closed: stop raising them
-    learned.json              {finding_key: {feedback_item_id, batch}} for learned_at tagging
-    seen_batches.json         which batch folders we have ingested (idempotence)
-"""
+"""Read/write durable state under --state-dir: one JSON file per document plus indexes."""
 from __future__ import annotations
 
 import json
@@ -29,7 +19,6 @@ def _write(path: Path, obj) -> None:
     path.write_text(json.dumps(obj, ensure_ascii=False, indent=1, default=str), encoding="utf-8")
 
 
-# ---- documents --------------------------------------------------------------------------------------------------------
 def docs_dir(state_dir: str) -> Path:
     d = Path(state_dir) / "docs"
     d.mkdir(parents=True, exist_ok=True)
@@ -67,7 +56,6 @@ def save_docs_index(state_dir: str, index: dict) -> None:
     _write(Path(state_dir) / "docs_index.json", index)
 
 
-# ---- batches (idempotence) --------------------------------------------------------------------------------------------
 def seen_batches(state_dir: str) -> set[str]:
     return set(_read(Path(state_dir) / "seen_batches.json", []))
 
@@ -78,7 +66,6 @@ def mark_batch_seen(state_dir: str, batch: str) -> None:
     _write(Path(state_dir) / "seen_batches.json", sorted(seen))
 
 
-# ---- feedback facts ---------------------------------------------------------------------------------------------------
 def load_facts(state_dir: str) -> list[dict]:
     return _read(Path(state_dir) / "facts.json", [])
 
@@ -101,3 +88,4 @@ def load_learned(state_dir: str) -> dict:
 
 def save_learned(state_dir: str, learned: dict) -> None:
     _write(Path(state_dir) / "learned.json", learned)
+

@@ -1,13 +1,4 @@
-"""feedback.json -> durable facts under --state-dir.
-
-The grader feeds this in AFTER a batch's report, so everything here only affects LATER reports.
-Two scopes:
-  standing -> applies to future keys where every filter in applies_to matches, inside its dates
-  one_off  -> changes that one key and nothing else (applying a March waiver to April is a
-              hard-gate mistake)
-
-A feedback fact counts as level 2 authority from decided_at.
-"""
+"""Apply a person's feedback.json to durable state; only later reports are affected."""
 from __future__ import annotations
 
 from . import state
@@ -31,7 +22,6 @@ def apply_feedback(data: dict, state_dir: str) -> None:
         fb_id = it.get("item_id")
 
         if decision == "reject":
-            # that key is not a finding: drop it forever
             closed[key] = {"reason": "reject", "fb": fb_id}
             learned.pop(key, None)
             continue
@@ -39,10 +29,7 @@ def apply_feedback(data: dict, state_dir: str) -> None:
         if decision == "close":
             if fact_type == "dispute_closed":
                 closed[key] = {"reason": "dispute_closed", "fb": fb_id}
-                # stop raising that key; a NEW invoice with the same wrong rate is a new finding,
-                # so we close the exact key only.
             elif fact_type == "rate_accepted":
-                # stop this key AND treat the named notice as the rate for contract+lane
                 closed[key] = {"reason": "rate_accepted", "fb": fb_id}
                 facts.append({
                     "fact_type": "rate_accepted",
@@ -111,7 +98,6 @@ def apply_feedback(data: dict, state_dir: str) -> None:
             learned[key] = {"feedback_item_id": fb_id, "batch": batch}
             continue
 
-        # confirm without a known fact type: record it anyway so the key is marked learned
         if decision == "confirm":
             learned[key] = {"feedback_item_id": fb_id, "batch": batch}
 
@@ -128,3 +114,4 @@ def _key_str(fk: dict) -> str:
     if cls == "expiry":
         return f"expiry:{fk.get('contract_id')}"
     return f"{cls}:{fk.get('invoice_id')}"
+

@@ -66,9 +66,7 @@ def run(name: str) -> bool:
     for k in sorted(set(got) | set(want)):
         g, w = got.get(k), want.get(k)
         if g != w:
-            # evidence-only difference: same verdict+amount+action but expected has entry we lack
             if g is None:
-                # we omitted an entry the example lists; check if it's a no_finding (allowed to omit)
                 if w[0] == "no_finding":
                     continue
                 ok = False
@@ -91,3 +89,4 @@ def main():
 
 if __name__ == "__main__":
     main()
+

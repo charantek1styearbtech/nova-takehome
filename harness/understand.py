@@ -1,18 +1,4 @@
-"""Layer 2: text -> the universal document schema every downstream check reads.
-
-Hybrid by design, and LLM-frugal: the grader gives each `ingest` step 600 seconds, and a batch
-can hold 40+ emails, so we spend LLM calls only where meaning is actually needed.
-
-- classification:   filename + content keywords first; LLM only when unsure
-- invoices/credits: deterministic regex (exact numbers matter); LLM fallback per-field
-- tracking/register: deterministic (they are tables)
-- emails:           deterministic mentions + keyword kind; LLM only for scope the regex missed
-- contracts:        LLM (the one heavy call: clauses, rates, Schedule 1 vary by carrier)
-- scans:            vision model (no text layer)
-
-Every doc keeps raw_pages: evidence quotes come from there (the same text the grader checks),
-never from an LLM paraphrase.
-"""
+"""Layer 2: page text -> structured documents. Deterministic parsing first, LLM only where meaning is needed."""
 from __future__ import annotations
 
 import re
@@ -22,17 +8,14 @@ from . import extract as X
 from . import llm
 
 
-# ---- shared helpers ---------------------------------------------------------------------------------------------------
 def _invoice_id(raw: str) -> str:
     """As printed, uppercase, spaces and the characters '#' and ':' taken out."""
     return raw.upper().replace(" ", "").replace("#", "").replace(":", "")
 
 
 DATE_RE = re.compile(r"(\d{4}-\d{2}-\d{2})")
-# an ID-shaped token: letters/digits joined by dashes, must contain a digit (TX-US-2032-5394, CDI-2930-0148)
 ID_TOKEN = re.compile(r"\b[A-Z][A-Z0-9]*(?:-[A-Z0-9]+)+\b")
 AWB_RE = re.compile(r"\b([A-Z]{2}\d{7,}(?:-H\d+)?)\b")
-# slash-joined invoice ids like TXI/35-36/0030
 SLASH_ID = re.compile(r"\b([A-Z][A-Z0-9]*(?:/[A-Z0-9]+)+)\b")
 
 
@@ -42,16 +25,13 @@ def _looks_like_doc_id(tok: str) -> bool:
         return False
     if DATE_RE.fullmatch(tok):
         return False
-    # lane codes are 4 letters + digit both sides: USE2-INE2
     if re.fullmatch(r"[A-Z]{3}\d-[A-Z]{3}\d", tok):
         return False
-    # contract ids carry -EXP- (TBX-US-EXP-01) or /EXP/ (never an invoice)
     if "-EXP-" in tok or "/EXP/" in tok:
         return False
     return True
 
 
-# ---- classification: heuristic first ----------------------------------------------------------------------------------
 def _classify_heuristic(doc_id: str, pages: list[str]) -> str:
     name = doc_id.split("#")[-1].lower()
     head = (pages[0][:1200] if pages else "").lower()
@@ -69,12 +49,11 @@ def _classify_heuristic(doc_id: str, pages: list[str]) -> str:
         return "ap_register"
     if "credit note" in text or "credit memo" in text:
         return "credit_note"
-    # a monthly statement counts as an invoice (GLOSSARY) - never hand this to the LLM
     if "statement of account" in text:
         return "invoice"
     if ("invoice" in head or re.search(r"\binvoice\b", name)
             or "freight bill" in text or "balance due" in head or "net charges" in head
-            or re.search(r"charges\s*advice", text)):  # carriers that title the bill "Charges advice ..."
+            or re.search(r"charges\s*advice", text)):
         return "invoice"
     if "waybill" in text or name.startswith("awb"):
         return "air_waybill"
@@ -101,7 +80,6 @@ def classify(doc_id: str, pages: list[str]) -> str:
         return "other"
 
 
-# ---- invoices (deterministic) -----------------------------------------------------------------------------------------
 LINE_RE = re.compile(
     r"^(?P<idx>\d+)\s+(?P<awb>[A-Z]{2}\d{7,}(?:-H\d+)?|[A-Z0-9]+-[A-Z0-9]+-[A-Z0-9]+)\s+"
     r"(?P<date>\d{4}-\d{2}-\d{2}|\d{1,2}\s+\w+\s+\d{4})\s+"
@@ -109,33 +87,27 @@ LINE_RE = re.compile(
     r"(?P<qty>[\d.]+)\s*(?P<unit>kg|shpt|pcs|days?|m3|cbm|lbl)?\s+"
     r"(?P<rate>[\d.]+%?|[\d.]+)\s+(?P<amount>[\d.]+)\s*$"
 )
-# fallback: any numbered line ending in an amount (fees, late fees, lines without a lane)
 LINE_LOOSE_RE = re.compile(
     r"^(?P<idx>\d+)\s+(?P<awb>[A-Z]{2}\d{7,}(?:-H\d+)?|[A-Z0-9]+-[A-Z0-9]+-[A-Z0-9]+)?\s*"
     r"(?P<desc>.+?)\s+(?P<amount>\d+\.\d{2})\s*$"
 )
-# "Freight bill" layout: no index, amount BEFORE qty, optional house-AWB suffix
 LINE_FB_RE = re.compile(
     r"^(?P<desc>.+?)\s+(?P<awb>[A-Z]{2}\d{7,}(?:-H\d+)?)\s+(?P<lane>[A-Z]{3,4}\d?-[A-Z]{3,4}\d?)\s+"
     r"(?P<date>\d{4}-\d{2}-\d{2}|\d{1,2}\s+\w+\s+\d{4})\s+(?P<amount>[\d,]+\.\d{2})\s+"
     r"(?P<qty>[\d.]+)\s*(?P<unit>kg|shpt|pcs|days?|m3|cbm|lbl)?\s+(?P<rate>[\d.]+%?)?\s*$"
 )
-# "IN" layout: AWB first, description, pickup, lane, SAC code, then qty/rate/amount
 LINE_IN_RE = re.compile(
     r"^(?P<awb>[A-Z]{2}\d{7,}(?:-H\d+)?)\s+(?P<desc>.+?)\s+(?P<date>\d{4}-\d{2}-\d{2})\s+"
     r"(?P<lane>[A-Z]{3,4}\d?-[A-Z]{3,4}\d?)\s+(?P<sac>\d{4,6})?\s*"
     r"(?P<qty>[\d.]+)\s*(?P<unit>kg|shpt|pcs|days?|m3|cbm|lbl)?\s+"
     r"(?P<rate>[\d.]+%?)\s+(?P<amount>[\d,]+\.\d{2})\s*$"
 )
-# "Charges advice" layout: lane, waybill, charge, basis, rate, amount, collected (DD/MM/YYYY);
-# non-shipment rows (duty disbursements) end in "-" instead of a collected date
 LINE_ADVICE_RE = re.compile(
     r"^(?P<lane>[A-Z]{3,4}\d?-[A-Z]{3,4}\d?)\s+(?P<awb>[A-Z]{2}\d{7,}(?:-H\d+)?)\s+(?P<desc>.+?)\s+"
     r"(?P<qty>[\d,]+(?:\.\d+)?)\s*(?P<unit>kg|shpt|pcs|days?|m3|cbm|lbl|fee)?\s+"
     r"(?P<rate>[\d,]+\.\d{2}%?)\s+(?P<amount>[\d,]+\.\d{2})\s+"
     r"(?P<date>\d{1,2}/\d{1,2}/\d{4}|\d{4}-\d{2}-\d{2}|-)\s*$"
 )
-# billed late fee rows: "- - Late fee on CDU-3051262: USD 1448.48 overdue, ... 1.49% 21.58 -"
 LINE_FEE_RE = re.compile(
     r"^-\s+-\s+(?P<desc>Late fee.+?)\s+(?P<amount>[\d,]+\.\d{2})\s+-\s*$"
 )
@@ -153,9 +125,7 @@ MONTH_RANGE_RE = re.compile(
 
 
 def norm_date(s: str | None) -> str | None:
-    """'19 May 2033' -> '2033-05-19'; ISO passes through; '03/06/2030' -> '2030-06-03'
-    (carriers print DD/MM/YYYY: 19/05/2030 can only be 19 May, 03/07/2030 is 30 days
-    after 03/06/2030's document date). Only fall back to MM/DD when the first part > 12."""
+    """Parse ISO, DD/MM/YYYY and "9 Mar 2030" dates; None when unparseable."""
     if not s:
         return None
     s = s.strip()
@@ -165,11 +135,11 @@ def norm_date(s: str | None) -> str | None:
     if m:
         a, b, y = int(m.group(1)), int(m.group(2)), int(m.group(3))
         if a > 12 >= b:
-            day, month = a, b        # 19/05/2030: only DD/MM works
+            day, month = a, b
         elif b > 12 >= a:
-            day, month = b, a        # 05/19/2030: only MM/DD works
+            day, month = b, a
         elif a <= 12 and b <= 12:
-            day, month = a, b        # ambiguous: these carriers print DD/MM
+            day, month = a, b
         else:
             return None
         return f"{y}-{month:02d}-{day:02d}"
@@ -191,7 +161,7 @@ def _matched_line(m: re.Match, raw: str) -> dict:
         if nd:
             gd["date"] = nd
         else:
-            gd.pop("date", None)  # "-" for rows with no collected date: never a usable pickup date
+            gd.pop("date", None)
     return {**gd, "raw": raw}
 
 
@@ -218,25 +188,21 @@ def parse_invoice_lines(pages: list[str]) -> list[dict]:
                 lines.append(_matched_line(m, raw))
                 seen.add(raw)
                 continue
-            # IN layout: AWB first, description, pickup date, lane, SAC, qty, rate, amount
             m = LINE_IN_RE.match(raw)
             if m:
                 lines.append(_matched_line(m, raw))
                 seen.add(raw)
                 continue
-            # "Charges advice" layout: lane, waybill, charge, basis, rate, amount, collected
             m = LINE_ADVICE_RE.match(raw)
             if m:
                 lines.append(_matched_line(m, raw))
                 seen.add(raw)
                 continue
-            # billed late fee row (dash columns instead of an index)
             m = LINE_FEE_RE.match(raw)
             if m:
                 lines.append(_matched_line(m, raw))
                 seen.add(raw)
                 continue
-            # fee row that fits no column layout: "Late fee on TX-...: USD 2002.93 overdue ... - - - 39.66 1 month"
             if re.search(r"\blate fee\b", raw, re.I):
                 m2 = re.search(r"-\s+-\s+-\s+([\d][\d,]*(?:\.\d{1,2})?)\s+\d+\s*month", raw)
                 if not m2:
@@ -245,7 +211,6 @@ def parse_invoice_lines(pages: list[str]) -> list[dict]:
                     lines.append({"desc": raw, "amount": m2.group(1).replace(",", ""), "raw": raw})
                     seen.add(raw)
                     continue
-            # pipe-separated sheet rows (monthly statements): Charge | Reference | Qty | Rate | Amount
             if "|" in raw:
                 parts = [p.strip() for p in raw.split("|")]
                 if (len(parts) >= 2 and re.search(r"[A-Za-z]", parts[0] or "")
@@ -294,7 +259,6 @@ def extract_invoice(doc_id: str, pages: list[str], email_subject: str, received:
     m = re.search(r"(?:Contract\s*reference|Service\s+agreement)\s*:?\s*([A-Z0-9][A-Z0-9-]+)",
                   text, re.I)
     if not m:
-        # "Contract CDA-US-EXP-E91 Currency USD" (a bare contract id, must carry a digit)
         m = re.search(r"\bContract\s*:?\s*(?=[A-Z0-9-]*\d)([A-Z][A-Z0-9-]*\d[A-Z0-9-]*)",
                       text, re.I)
     doc["contract_ref"] = m.group(1) if m else None
@@ -305,44 +269,35 @@ def extract_invoice(doc_id: str, pages: list[str], email_subject: str, received:
         m = re.search(r"Balance\s+due\s+(?:USD|INR|EUR|GBP)\s*:?\s*([\d,]+\.\d{1,2})", text, re.I)
     doc["total"] = float(m.group(1).replace(",", "")) if m else None
     if doc["total"] is None and doc["lines"]:
-        # last resort: sum of lines (only when no explicit total)
         doc["total"] = round(sum(float(l.get("amount") or 0) for l in doc["lines"]), 2)
     doc["parse_ok"] = bool(doc["invoice_id"])
     return doc
 
 
 def _extract_invoice_id(text: str, email_subject: str) -> str:
-    # 0. a monthly statement's own number: "STATEMENT OF ACCOUNT TX-ST-203501"
     m = re.search(r"STATEMENT\s+OF\s+ACCOUNT\s+([A-Z][A-Z0-9-]*\d)", text, re.I)
     if m and _looks_like_doc_id(m.group(1).upper()):
         return _invoice_id(m.group(1))
-    # 1. the printed header: "INVOICE TX-US-2032-5394" / "Freight bill no. TX-US-2033-5512"
-    #    / "Charges advice CDU-3051254"
     m = re.search(r"\b(?:INVOICE|Freight\s+bill\s+no\.?|Charges\s+advice)\s+([A-Z0-9][A-Z0-9/-]*\d[A-Z0-9/-]*)\b",
                   text, re.I)
     if m and _looks_like_doc_id(m.group(1).upper().replace("/", "-")):
         return _invoice_id(m.group(1))
-    # 2. the email subject: "Invoice TX-US-2032-5394" / "Re: Invoice CDI-2930-0148"
     m = re.search(r"\b(?:Invoice|INV)\b\s*(?:No\.?|Number|#|:)?\s*([A-Z0-9][A-Z0-9/-]*\d[A-Z0-9/-]*)",
                   email_subject, re.I)
     if m and _looks_like_doc_id(m.group(1).upper().replace("/", "-")):
         return _invoice_id(m.group(1))
-    # 3. body: "invoice TX-US-2032-5394 for services"
     m = re.search(r"\binvoice\s+([A-Z0-9][A-Z0-9/-]*\d[A-Z0-9/-]*)\b", text, re.I)
     if m and _looks_like_doc_id(m.group(1).upper().replace("/", "-")):
         return _invoice_id(m.group(1))
-    # 3b. slash-shaped ids: TXI/35-36/0030
     for tok in SLASH_ID.findall(text):
         if _looks_like_doc_id(tok.upper()):
             return _invoice_id(tok)
-    # 4. any ID-shaped token that isn't the contract reference
     for tok in ID_TOKEN.findall(text):
         if _looks_like_doc_id(tok):
             return _invoice_id(tok)
     return ""
 
 
-# ---- tracking export (deterministic) ----------------------------------------------------------------------------------
 TRACK_EVENTS = ("PICKED_UP", "DELIVERED", "DEPARTED", "ARRIVED", "ARRIVED_FACILITY",
                 "TENDERED", "BOOKED", "CUSTOMS", "OUT_FOR_DELIVERY", "CANCELLED")
 
@@ -364,7 +319,6 @@ def extract_tracking(doc_id: str, pages: list[str], received: str) -> dict:
             "events": events, "raw_pages": pages, "parse_ok": bool(events)}
 
 
-# ---- AP register (deterministic) --------------------------------------------------------------------------------------
 ROW_ID_RE = re.compile(
     r"\b([A-Z]{2,5}-[A-Z0-9]*-?\d{2,4}-\d{2,6}|[A-Z]{2,5}\d{4}-\d{3,6}|[A-Z]{2,5}-\d{5,8})\b")
 
@@ -414,14 +368,11 @@ def extract_ap_register(doc_id: str, pages: list[str], received: str) -> dict:
             "rows": rows, "raw_pages": pages, "parse_ok": bool(rows)}
 
 
-# ---- credit notes (deterministic, invoice-shaped) ----------------------------------------------------------------------
 def extract_credit_note(doc_id: str, pages: list[str], email_subject: str, received: str) -> dict:
     d = extract_invoice(doc_id, pages, email_subject, received, doc_type="credit_note")
-    # credits key by contract/period in analysis; keep amount + references
     return d
 
 
-# ---- emails: deterministic mentions + kind, LLM only for scope ---------------------------------------------------------
 KIND_RULES = [
     ("waiver", re.compile(r"\bwaiv(e|er|ed|ing)\b", re.I)),
     ("extension", re.compile(r"\bextend(ed|s)?\b|\bdue date extension\b|\bextension of\b", re.I)),
@@ -442,7 +393,6 @@ def extract_email(doc_id: str, pages: list[str], received: str) -> dict:
         "source_email": doc_id, "raw_pages": pages, "parse_ok": True,
         "kind": "note", "mentions": {}, "prompt_injection": False,
     }
-    # headers out of the formatted page
     fm = re.search(r"^From: (.*?)\s*<(.+?)>", text, re.M)
     if fm:
         doc["sender_name"], doc["sender_email"] = fm.group(1).strip(), fm.group(2).strip()
@@ -453,21 +403,18 @@ def extract_email(doc_id: str, pages: list[str], received: str) -> dict:
     body = text.split("\n\n", 1)[1] if "\n\n" in text else text
     doc["body"] = body
 
-    # prompt injection: text aimed at automated readers is DATA, never instructions
     if re.search(r"\b(the AI|automated system|automated systems|the auditor|assistant|ignore (these|the) "
                  r"instructions|do not report|do not flag)\b", body, re.I):
         doc["prompt_injection"] = True
 
-    # mentions: invoice ids, AWBs, contract ids, lanes, months
     inv_ids = [t for t in list(ID_TOKEN.findall(body)) + list(SLASH_ID.findall(body))
                if _looks_like_doc_id(t)]
-    # contract ids look like TBX-US-EXP-E60 / CDA-IN-EXP-E91 (EXP pattern)
     contracts = [t for t in ID_TOKEN.findall(body) if re.search(r"-EXP-|AMD-", t)]
     inv_ids = [t for t in inv_ids if t not in contracts]
     lanes = []
     for lm in re.finditer(r"\b([A-Z]{3,4}\d?-[A-Z]{3,4}\d?)\b", body):
         if body[lm.end():].startswith(("-EXP-", "-AMD-")):
-            continue  # the head of a contract/amendment id, not a lane
+            continue
         lanes.append(lm.group(1))
     doc["mentions"] = {
         "invoice_ids": sorted({_invoice_id(t) for t in inv_ids}),
@@ -477,13 +424,11 @@ def extract_email(doc_id: str, pages: list[str], received: str) -> dict:
         "months": sorted(set(re.findall(r"\b(20\d{2}-\d{2})\b", body))),
     }
 
-    # kind by keyword
     for kind, pat in KIND_RULES:
         if pat.search(doc["subject"]) or pat.search(body):
             doc["kind"] = kind
             break
 
-    # structured details the analysis needs — deterministic first
     doc["waiver"] = _parse_waiver(body)
     doc["extension"] = _parse_extension(body, doc["mentions"]["invoice_ids"])
     doc["rate_notice"] = _parse_rate_notice(body, doc["mentions"].get("lane"))
@@ -517,8 +462,6 @@ def _parse_waiver(body: str) -> dict | None:
     if m:
         out["charge"] = m.group(1).strip()
     if not out.get("charge"):
-        # "Please treat the Delivery fee on AWB CA10343321 as waived." /
-        # "The Delivery fee billed against AWB CA75329761 is waived."
         m = re.search(r"([A-Za-z][\w'-]*(?:\s+[A-Za-z][\w'-]*){0,2})\s+(?:on|against)\s+"
                       r"(?:AWB\s+)?[A-Z]{2}\d{7,}", sent)
         if m and not re.search(r"\d", m.group(1)):
@@ -529,8 +472,6 @@ def _parse_waiver(body: str) -> dict | None:
     if m:
         out["month"] = m.group(1)
     if not out.get("charge"):
-        # no readable charge name: one LLM call to read the scope out of this one sentence
-        # (without it a waiver naming only an AWB would wrongly cover every line on it)
         try:
             j = llm.ask_json(
                 'Extract waiver scope. JSON only: {"charge": "...", "awb": "...", "month": "YYYY-MM", '
@@ -555,7 +496,6 @@ def _parse_extension(body: str, invoice_ids: list[str]) -> dict | None:
     elif invoice_ids:
         out["invoice_id"] = invoice_ids[0]
     m = DATE_RE.search(sent.replace("to ", " to "))
-    # prefer the date AFTER 'to'
     m2 = re.search(r"\bto\s+(\d{4}-\d{2}-\d{2})", sent, re.I)
     if m2:
         out["new_due_date"] = m2.group(1)
@@ -570,7 +510,6 @@ def _parse_rate_notice(body: str, lane: str | None) -> dict | None:
         return None
     bands = []
     band_lane = None
-    # "USE2-USC3 45-99.5 kg = USD 4.72" / "USC3-INS1 45-99.5 kg: 5.03 USD"
     for m in re.finditer(r"([A-Z]{3,4}\d?-[A-Z]{3,4}\d?)\s+(\d+(?:\.\d+)?)-(\d+(?:\.\d+)?)\s*kg\s*[:=]?\s*"
                          r"(?:USD\s+)?(\d+(?:\.\d+)?)", body, re.I):
         band_lane = band_lane or m.group(1)
@@ -580,7 +519,6 @@ def _parse_rate_notice(body: str, lane: str | None) -> dict | None:
         for m in re.finditer(r"([A-Z]{3,4}\d?-[A-Z]{3,4}\d?)\s*:?\s*(\d+(?:\.\d+)?)\s*USD", body, re.I):
             band_lane = band_lane or m.group(1)
             bands.append({"min_kg": 0, "max_kg": 10**9, "rate": float(m.group(2))})
-    # open top band: "USC3-INS1 300+ kg: 4.57 USD" / "USE2-USC3 300+ kg = USD 4.06"
     for m in re.finditer(r"([A-Z]{3,4}\d?-[A-Z]{3,4}\d?)\s+(\d+(?:\.\d+)?)\s*\+\s*kg\s*[:=]?\s*"
                          r"(?:USD\s+)?(\d+(?:\.\d+)?)", body, re.I):
         band_lane = band_lane or m.group(1)
@@ -588,9 +526,8 @@ def _parse_rate_notice(body: str, lane: str | None) -> dict | None:
                       "rate": float(m.group(3))})
     if not bands and not sent:
         return None
-    lane = band_lane or lane  # the lanes the bands were printed for beat any lane guessed from prose
+    lane = band_lane or lane
     out: dict = {"lane": lane, "bands": bands, "text": (sent or body.strip())[:400]}
-    # effective window: "effective 2035-03-13 to 2035-09-25" / "pickups from 2030-09-15 until ..."
     m = re.search(r"effective\s+(\d{4}-\d{2}-\d{2})\s+(?:to|through|-)\s+(\d{4}-\d{2}-\d{2})",
                   body, re.I)
     if not m:
@@ -599,28 +536,20 @@ def _parse_rate_notice(body: str, lane: str | None) -> dict | None:
     if m:
         out["effective_from"], out["effective_to"] = m.group(1), m.group(2)
     else:
-        dates = list(dict.fromkeys(DATE_RE.findall(body)))  # dedupe: ref dates repeat in the prose
+        dates = list(dict.fromkeys(DATE_RE.findall(body)))
         if len(dates) >= 1:
             out["effective_from"] = dates[0]
         if len(dates) >= 2:
             out["effective_to"] = dates[1]
-    # "Reference: TBX-US-EXP-01/RN-USC3-INS1-2035-03-13" / "Notice ref. CDA-US-EXP-E91/RN-..."
     m = re.search(r"(?:Reference:|Notice\s+ref\.?)\s*([A-Z0-9][A-Z0-9-]+)/(\S+)", body, re.I)
     if m:
         out["contract_ref"] = m.group(1)
         out["notice_ref"] = m.group(2)
-    # "USC3-INS1 minimum charge: 90.77 USD" / "minimum charge = USD 85.98"
     m = re.search(r"minimum\s+charge\s*[:=]?\s*(?:USD\s+)?([\d.]+)", body, re.I)
     if m:
         out["min_charge"] = float(m.group(1))
     return out
 
-
-# ---- contracts: deterministic mechanical parse, LLM only when the structure isn't recognized -------
-# The MSA/amendment text is highly regular (rate tables, fuel tables, Schedule 1 lines, numbered
-# clauses), and evidence quotes must be verbatim from the pages anyway — so we parse mechanically
-# and know exact page numbers. The LLM only runs when the parse finds nothing recognizable
-# (a differently laid-out exam contract), and only on the pages that matter.
 
 SCHED_LINE_RE = re.compile(
     r"^(?P<person>[A-Z][\w.'-]+(?:\s+[A-Z][\w.'-]+)+),\s*(?P<title>[^,]+?),\s*"
@@ -638,7 +567,6 @@ PERIOD_RE = re.compile(
 FUEL_ROW_RE = re.compile(r"^(20\d{2}-\d{2})\s+([\d.]+)\s*%\s*$")
 FX_ROW_RE = re.compile(r"^(20\d{2}-\d{2})\s+([\d.]+)\s*$")
 
-# sentence-level clause quotes: keyword -> quote we lift verbatim (with its page)
 CLAUSE_KEYWORDS = {
     "pricing_date": re.compile(r"\bpricing date\b", re.I),
     "minimum_charge": re.compile(r"\bminimum charge\b", re.I),
@@ -661,9 +589,7 @@ CLAUSE_KEYWORDS = {
 
 
 def _sentence_with(page_text: str, pat: re.Pattern, skip_contents: bool = True) -> str | None:
-    """The sentence containing pat (verbatim substring of the page, so the grader finds it).
-    A clause header like '3.2 Pricing date.' is joined with the sentence that follows it —
-    that full passage is the deciding quote."""
+    """First sentence matching the pattern; used for waiver/notice/extension parsing."""
     if skip_contents and re.match(r".*\nContents\n", page_text[:200], re.S):
         return None
     flat = " ".join(page_text.split())
@@ -671,7 +597,6 @@ def _sentence_with(page_text: str, pat: re.Pattern, skip_contents: bool = True) 
     for i, sent in enumerate(sents):
         if pat.search(sent) and len(sent) >= 12:
             out = sent.strip()
-            # header-only sentence (e.g. '3.2 Pricing date.') -> pull in the next one
             if len(out) < 60 and i + 1 < len(sents):
                 out = out + " " + sents[i + 1].strip()
             return out
@@ -709,13 +634,11 @@ def _contract_mechanical(doc_id: str, pages: list[str], received: str) -> dict:
         "min_charge_by_lane": {}, "accessorial_by_name": {}, "accessorial_alias": {},
     }
 
-    # contract id
     m = (re.search(r"Agreement\s+No\.?\s+([A-Z0-9][A-Z0-9-]+)", full)
          or re.search(r"Agreement\s+([A-Z]{2,6}(?:-[A-Z0-9]+){1,5})", full))
     if m:
         doc["contract_id"] = m.group(1)
     else:
-        # filename: MSA-TBX-US-EXP-E60.pdf / TBX-US-EXP-90-AMD-1.pdf
         fname = doc_id.split("#")[-1].rsplit(".", 1)[0]
         fname = re.sub(r"^(MSA|Amd|AMD)-", "", fname)
         doc["contract_id"] = fname
@@ -725,7 +648,6 @@ def _contract_mechanical(doc_id: str, pages: list[str], received: str) -> dict:
     else:
         doc["base_contract_id"] = doc["contract_id"]
 
-    # parties
     m = re.search(r"\((the Shipper)\).*?\((the Carrier)\)", full, re.S)
     ship = re.search(r"between\s*\n?\s*(?:\(\d\)\s*)?([A-Z][\w\s.&'-]+?),\s*(?:whose|an? )", full)
     doc["parties"] = {
@@ -736,7 +658,6 @@ def _contract_mechanical(doc_id: str, pages: list[str], received: str) -> dict:
                                  full) else None),
     }
 
-    # dates: effective / end / auto-renewal
     m = re.search(r"[Tt]akes effect on (\d{4}-\d{2}-\d{2})", full) or \
         re.search(r"[Ee]ffective from\s+(\d{4}-\d{2}-\d{2})", full) or \
         re.search(r"[Ee]ffective [Dd]ate(?:\s+of\s+this\s+Agreement)?\s*(?:is\s+|:\s*|\s+)"
@@ -761,10 +682,8 @@ def _contract_mechanical(doc_id: str, pages: list[str], received: str) -> dict:
     doc["expiry"] = {"end_date": doc["end_date"], "auto_renews": auto,
                      "notice_deadline": None}
 
-    # currency
     doc["currency"] = "USD" if re.search(r"\bUSD\b", full) else ("INR" if re.search(r"\bINR\b", full) else "USD")
 
-    # ---- page-level scan: rate tables, fuel, fx, schedule 1, clauses, accessorials -----------------
     periods: list[tuple[str, str]] = []
     lanes_by_code: dict[str, dict] = {}
     season_pending: str | None = None
@@ -774,7 +693,6 @@ def _contract_mechanical(doc_id: str, pages: list[str], received: str) -> dict:
             if not line:
                 continue
 
-            # a seasonal condition whose month range wrapped to the next line
             if season_pending is not None:
                 sm = MONTH_RANGE_RE.search(line)
                 if sm:
@@ -838,15 +756,11 @@ def _contract_mechanical(doc_id: str, pages: list[str], received: str) -> dict:
                 })
                 continue
 
-            # Annex F fx rows (only inside the Annex F section: row is YYYY-MM number and a
-            # heading recently mentioned exchange rates)
             if re.search(r"[Ee]xchange rates|[Aa]nnex F", page):
                 xm = FX_ROW_RE.match(line)
                 if xm:
                     doc["fx_inr_per_usd_by_month"][xm.group(1)] = float(xm.group(2))
 
-            # accessorial fee table: "DLV Delivery fee 121.81 USD per shipment" (Annex D;
-            # the currency can be USD or INR and a seasonal condition may trail the basis)
             am = re.match(r"^([A-Z]{2,8})\s+([A-Za-z][A-Za-z ]+?)\s+([\d.]+)\s+(USD|INR)\s+per\s+"
                           r"(shipment|chargeable kg|storage day|month)", line)
             if am:
@@ -866,7 +780,6 @@ def _contract_mechanical(doc_id: str, pages: list[str], received: str) -> dict:
                     else:
                         season_pending = key
 
-            # Annex E charge-code aliases: "Code FRT: Air freight; also billed as: Express freight, Freight charge"
             em = re.match(r"^Code\s+([A-Z]{2,8}):\s*([^;]+?)(?:;\s*also billed as:\s*(.+))?$", line)
             if em:
                 canon = em.group(2).strip().lower()
@@ -876,7 +789,6 @@ def _contract_mechanical(doc_id: str, pages: list[str], received: str) -> dict:
                     if a:
                         doc["accessorial_alias"][a] = canon
 
-        # clause quotes from this page
         for key, pat in CLAUSE_KEYWORDS.items():
             if key in doc["key_clauses"]:
                 continue
@@ -887,8 +799,6 @@ def _contract_mechanical(doc_id: str, pages: list[str], received: str) -> dict:
 
     doc["lanes"] = list(lanes_by_code.values())
 
-    # an annex revision named in this document ("Annex A rev 2 (attached) applies from ... to lane(s) ..."):
-    # if we don't hold that revision as its own document, the lanes it governs can't be priced.
     doc["named_annexes"] = []
     ann_re = re.compile(r"\b((?:Annex|Schedule)\s+[A-Z0-9]+\s+rev(?:ision)?\.?\s+\d+)\b", re.I)
     for pno, page in enumerate(pages, 1):
@@ -906,29 +816,23 @@ def _contract_mechanical(doc_id: str, pages: list[str], received: str) -> dict:
                 "applies_from": af.group(1) if af else None,
             })
 
-    # fuel can also live in a "Month Fuel surcharge" table whose rows lack % or have headers —
-    # if we found none, scan whole text for month/percent pairs
     if not doc["fuel_percent_by_month"]:
         for m in re.finditer(r"\b(20\d{2}-\d{2})\s+([\d.]+)\s*%", full):
             doc["fuel_percent_by_month"][m.group(1)] = float(m.group(2))
 
-    # rebate tiers: "QS >= USD 70,000.00: 5%"
     tiers = [{"min_qs": float(t.replace(",", "")), "percent": float(p)}
              for t, p in re.findall(r"QS\s*>=\s*USD\s*([\d,]+\.\d{2}):\s*([\d.]+)\s*%", full)]
     doc["rebate_tiers"] = sorted(tiers, key=lambda t: -t["min_qs"]) if tiers else None
 
-    # annual improvement credit percent (promised_credit)
     m = re.search(r"credit of\s+([\d.]+)%\s+of the prior Contract Year", full, re.I)
     doc["annual_credit_percent"] = float(m.group(1)) if m else None
     m = re.search(r"Within (\d+) days after each anniversary", full, re.I)
     doc["annual_credit_days"] = int(m.group(1)) if m else None
 
-    # margin step-down (only when the contract actually has one)
     m = re.search(r"[Mm]argin step-down[.:]\s*([^.]+)\.", full)
     if m and not re.search(r"not applicable", m.group(1), re.I):
         doc["margin_step_down_text"] = m.group(1).strip()
 
-    # late fee: rate, grace, compounding
     lf: dict = {}
     m = re.search(r"late fee of\s+([\d.]+)%\s*per month", full, re.I) or \
         re.search(r"late fee[^.]{0,40}?([\d.]+)%", full, re.I)
@@ -947,12 +851,9 @@ def _contract_mechanical(doc_id: str, pages: list[str], received: str) -> dict:
                                      full, re.I))
     doc["late_fee"] = lf if lf.get("rate_percent") is not None else None
 
-    # payment terms: due N days after invoice date
     m = re.search(r"invoices? are due (\d+) days after the invoice date", full, re.I)
     doc["payment_terms_days"] = int(m.group(1)) if m else None
 
-    # QS definition (verbatim sentence, already captured as clause)
-    # minimum charge / pricing date etc. are in key_clauses
     return doc
 
 
@@ -971,7 +872,6 @@ def _contract_llm_fallback(doc_id: str, pages: list[str], received: str) -> dict
     if not isinstance(out, dict):
         out = {}
     mech = _contract_mechanical(doc_id, pages, received)
-    # take LLM fields only where the mechanical parse came up empty
     for k in ("contract_id", "effective_date", "end_date", "auto_renews", "parties",
               "rebate_tiers", "late_fee", "fx_inr_per_usd_by_month"):
         if out.get(k) and not mech.get(k):
@@ -985,7 +885,6 @@ def _contract_llm_fallback(doc_id: str, pages: list[str], received: str) -> dict
     if out.get("key_clauses"):
         for k, v in (out["key_clauses"] or {}).items():
             if v and k not in mech["key_clauses"]:
-                # verify verbatim against a page; store the page we found it on
                 for pno, ptext in enumerate(pages, 1):
                     if " ".join(str(v).split()) in " ".join(ptext.split()):
                         mech["key_clauses"][k] = v
@@ -996,17 +895,15 @@ def _contract_llm_fallback(doc_id: str, pages: list[str], received: str) -> dict
 
 def extract_contract(doc_id: str, pages: list[str], received: str) -> dict:
     doc = _contract_mechanical(doc_id, pages, received)
-    # structure not recognized (different carrier layout): fall back to the LLM for the annex
     if not doc["lanes"] or (not doc["schedule_1"] and not doc["key_clauses"]):
         try:
             doc = _contract_llm_fallback(doc_id, pages, received)
         except Exception:
-            pass  # keep the mechanical parse; analysis can still cannot_determine
+            pass
     doc["parse_ok"] = bool(doc["lanes"] or doc["key_clauses"])
     return doc
 
 
-# ---- scans: vision ----------------------------------------------------------------------------------------------------
 def _vision_transcribe(b64_png: str) -> str:
     import base64 as _b64
     import json as _json
@@ -1066,9 +963,7 @@ def _space_repair(t: str) -> str:
 
 
 def _local_ocr_page(png: bytes) -> str:
-    """Local OCR fallback for vision endpoints that can't read images. RapidOCR gives one box
-    per table cell and drops some spaces/commas; rebuild visual rows (cluster by vertical
-    centre), join cells left to right, and repair '90.535.08' -> '90,535.08'."""
+    """OCR fallback for a page with no text layer (RapidOCR, optional dependency)."""
     try:
         import cv2
         import numpy as np
@@ -1105,7 +1000,6 @@ def _local_ocr_page(png: bytes) -> str:
     for row in rows:
         cells = sorted(row["cells"], key=lambda b: b["left"])
         line = " ".join(_space_repair(c["text"]) for c in cells)
-        # OCR read thousands commas as dots: 90.535.08 means 90,535.08
         line = re.sub(r"(?<![\d,.])(\d{1,3})\.(\d{3})\.(\d{2})(?!\d)", r"\1,\2.\3", line)
         out.append(line)
     return "\n".join(out)
@@ -1121,12 +1015,11 @@ def _ocr_pages(png_pages: list[bytes]) -> list[str]:
         except Exception:
             t = ""
         if not _looks_transcribed(t):
-            t = _local_ocr_page(png)  # vision unavailable or refused: local OCR reads it
+            t = _local_ocr_page(png)
         texts.append(t)
     return texts or [""]
 
 
-# ---- batch entry point -------------------------------------------------------------------------------------------------
 def ingest_batch(batch_dir: str, state_dir: str) -> int:
     """Read every .eml in batch_dir, build universal docs, save under state_dir. -> count"""
     from pathlib import Path
@@ -1163,7 +1056,6 @@ def ingest_batch(batch_dir: str, state_dir: str) -> int:
                         doc = {"doc_id": doc_id, "doc_type": "scanned",
                                "received_date": received, "source_email": email_doc_id,
                                "raw_pages": pages, "parse_ok": True}
-                        # treat it as whatever it says it is
                         ctype = _classify_heuristic(doc_id, pages)
                         if ctype == "invoice" or ctype == "unsure":
                             doc = extract_invoice(doc_id, pages, subject, received)
@@ -1199,7 +1091,7 @@ def ingest_batch(batch_dir: str, state_dir: str) -> int:
                                "source_email": email_doc_id, "raw_pages": pages, "parse_ok": True}
                 else:
                     continue
-            except Exception as e:  # noqa: BLE001 - never lose a batch to one bad file
+            except Exception as e:
                 doc = {"doc_id": doc_id, "doc_type": "unreadable", "received_date": received,
                        "source_email": email_doc_id, "error": str(e), "raw_pages": [],
                        "parse_ok": False}
@@ -1209,3 +1101,4 @@ def ingest_batch(batch_dir: str, state_dir: str) -> int:
 
     state.save_docs_index(state_dir, index)
     return count
+

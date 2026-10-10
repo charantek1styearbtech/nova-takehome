@@ -1,14 +1,4 @@
-"""Layer 1: read mailbox files back as text, page by page.
-
-Byte-for-byte the same reading logic as grader/extract.py (the grader checks our evidence
-quotes against ITS reader, so ours must match: words grouped by baseline, left to right per
-PDF line; XLSX rows as cell texts joined by " | "; .eml as headers + body + attachment list).
-Whitespace is collapsed when comparing, so a wrapped line still matches.
-
-Compared to the grader's copy, this one adds:
-- pdf_image()      -> raw image bytes for a scan (we read it with a vision model)
-- a few helpers the harness needs (attachment iteration, received date).
-"""
+"""Layer 1: read mailbox files (.eml/PDF/XLSX) back as page text, byte-compatible with the grader's reader."""
 from __future__ import annotations
 
 import io
@@ -27,7 +17,6 @@ def norm(s: str) -> str:
     return " ".join(s.split())
 
 
-# ---- PDF --------------------------------------------------------------------------------------------------------------
 def _reading_order(page) -> str:
     words = page.get_text("words")
     words.sort(key=lambda w: ((w[1] + w[3]) / 2, w[0]))
@@ -64,7 +53,6 @@ def pdf_png(data: bytes) -> list[bytes]:
     return out
 
 
-# ---- XLSX -------------------------------------------------------------------------------------------------------------
 def _cell_text(cell) -> str:
     v = cell.value
     if v is None:
@@ -98,7 +86,6 @@ def xlsx_pages(data: bytes) -> list[str]:
     return pages
 
 
-# ---- email ------------------------------------------------------------------------------------------------------------
 def parse_eml(data: bytes):
     return BytesParser(policy=policy.default).parsebytes(data)
 
@@ -136,7 +123,6 @@ def email_received(msg) -> datetime:
     return dt
 
 
-# ---- one entry point --------------------------------------------------------------------------------------------------
 def pages_of(data: bytes, ext: str) -> list[str]:
     ext = ext.lower().lstrip(".")
     if ext == "pdf":
@@ -221,3 +207,4 @@ class Mailbox:
             hint = f" (it is on page {where[0]})" if where else " (not found on any page)"
             return f"quote not on page {page} of {doc}{hint}: {quote[:80]!r}"
         return None
+

@@ -1,11 +1,4 @@
-"""One LLM client for the whole harness.
-
-Local dev: your OpenAI-compatible key (env NOVA_LLM_* variables).
-Grader:    it sets only ANTHROPIC_API_KEY + ANTHROPIC_BASE_URL, so we fall back to Anthropic.
-
-We only ask the model for JSON. Responses are parsed defensively: we strip code fences and
-take the first {...} or [...] block if the model wrapped the JSON in prose.
-"""
+"""JSON-only LLM client: NOVA_LLM_* (OpenAI-compatible) for local dev, ANTHROPIC_* for the grader."""
 from __future__ import annotations
 
 import json
@@ -67,12 +60,10 @@ def _extract_json(text: str):
     fence = re.search(r"```(?:json)?\s*(.*?)```", text, re.S)
     if fence:
         text = fence.group(1).strip()
-    # try direct parse first
     try:
         return json.loads(text)
     except json.JSONDecodeError:
         pass
-    # first balanced {...} or [...]
     for opener, closer in (("{", "}"), ("[", "]")):
         start = text.find(opener)
         if start == -1:
@@ -154,7 +145,7 @@ def ask_json(system: str, user: str, max_tokens: int = 4000, temperature: float 
                     "messages": [{"role": "user", "content": user}],
                 })
             return _extract_json(content)
-        except Exception as e:  # noqa: BLE001 - retry any transport/parse error
+        except Exception as e:
             last_err = e
             time.sleep(1.5 * (attempt + 1))
     raise RuntimeError(f"LLM call failed after {retries} tries: {last_err}")
@@ -182,3 +173,4 @@ def ask_text(system: str, user: str, max_tokens: int = 4000, temperature: float 
         "system": system,
         "messages": [{"role": "user", "content": user}],
     })
+

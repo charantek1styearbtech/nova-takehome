@@ -19,7 +19,6 @@ import argparse
 import sys
 from pathlib import Path
 
-# Allow running as `python harness/harness.py` (grader does this from the repo root).
 if __package__ in (None, ""):
     sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
     from harness import state, understand
@@ -35,8 +34,6 @@ DEFAULT_STATE = ".state"
 
 def ingest(batch_dir: str, state_dir: str) -> None:
     from pathlib import Path as _P
-    # Idempotence: the grader re-copies batches we've already seen; re-reading is safe (index
-    # skips known doc_ids) but costs LLM calls, so skip whole batches we've completed.
     batch_name = _P(batch_dir).name
     if batch_name in state.seen_batches(state_dir):
         return
@@ -85,7 +82,7 @@ def main(argv=None) -> int:
     except NotImplementedError as e:
         print(f"harness.py {a.cmd}: {e}", file=sys.stderr)
         return 3
-    except Exception as e:  # noqa: BLE001 - report a clean error, never a traceback to stdout
+    except Exception as e:
         print(f"harness.py {a.cmd}: {type(e).__name__}: {e}", file=sys.stderr)
         return 1
     return 0
@@ -93,3 +90,4 @@ def main(argv=None) -> int:
 
 if __name__ == "__main__":
     sys.exit(main())
+

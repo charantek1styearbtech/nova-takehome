@@ -1,23 +1,4 @@
-"""Build the four from-scratch eval mailboxes under evals/mailboxes/.
-
-Run once (they are checked in afterwards):
-
-    python evals/build_mailboxes.py
-
-Each mailbox is a small, self-contained world with my own carrier (Northaven Freight),
-customer and numbers - nothing from the practice or exam sets:
-
-  inr_advice/    INR charges advice in a DD/MM layout: freight billed over the P1 rate,
-                 Annex F conversion to USD, thousands commas. Expected overcharge 62.47.
-  usd_advice/    USD charges advice, DD/MM, with a duty disbursement row that ends in "-"
-                 (no collected date). Expected overcharge 74.97.
-  usd_notice/    same invoice plus a Schedule-1 rate notice that beats the MSA table.
-                 Expected overcharge 124.95 (notice rate 6.10).
-  usd_waiver/    a correctly-priced invoice whose Delivery fee was waived by a
-                 Schedule-1 sender but billed anyway. Expected waived_but_billed 48.00.
-
-The PDFs are generated with pymupdf so the exact text the harness reads is reproducible.
-"""
+"""Generate the four from-scratch eval mailboxes under evals/mailboxes/ (outputs are checked in)."""
 from __future__ import annotations
 
 import sys
@@ -30,7 +11,6 @@ import fitz
 ROOT = Path(__file__).resolve().parent.parent
 BOXES = ROOT / "evals" / "mailboxes"
 
-# --------------------------------------------------------------------------- pdf / eml helpers
 
 LINES_PER_PAGE = 62
 
@@ -73,8 +53,6 @@ def write_mailbox(name: str, emails: dict[str, bytes]) -> None:
         (d / fname).write_bytes(data)
     print(f"wrote {name}: {sorted(emails)}")
 
-
-# --------------------------------------------------------------------------- contracts
 
 def contract_us() -> bytes:
     return pdf_of([
@@ -195,8 +173,6 @@ def contract_in() -> bytes:
     ])
 
 
-# --------------------------------------------------------------------------- invoices
-
 def invoice_us(invoice_id: str, doc_date: str, due: str, rate: str,
                freight: str, fuel: str, total: str, with_duty: bool) -> bytes:
     lines = [
@@ -245,10 +221,7 @@ def invoice_in() -> bytes:
     ])
 
 
-# --------------------------------------------------------------------------- mailboxes
-
 def build() -> None:
-    # ---- inr_advice: overcharge 62.47 ((360-330)*150 + fuel, INR 5,310 / 85.00) ----
     write_mailbox("inr_advice", {
         "0001.eml": eml(
             "Ilaria Vestin", "ilaria.vestin@northaven.example", "meera.iyer@meridianbio.example",
@@ -265,7 +238,6 @@ def build() -> None:
             {"VRA-7741.pdf": invoice_in()}),
     })
 
-    # ---- usd_advice: overcharge 74.97 (freight 6.85 vs 6.40, fuel follows) ----
     us_contract = {"MSA-VRE-US-EXP-22.pdf": contract_us()}
     us_bad_invoice = {"NFR-10023.pdf": invoice_us(
         "NFR-10023", "20/07/2030", "19/08/2030", "6.85", "959.00", "182.21", "1,331.61",
@@ -286,7 +258,6 @@ def build() -> None:
             us_bad_invoice),
     })
 
-    # ---- usd_notice: the same invoice, but a Schedule-1 notice sets 6.10 -> 124.95 ----
     write_mailbox("usd_notice", {
         "0001.eml": eml(
             "Ilaria Vestin", "ilaria.vestin@northaven.example", "odette.quill@quillmed.example",
@@ -313,7 +284,6 @@ def build() -> None:
             {}),
     })
 
-    # ---- usd_waiver: correct prices, but the waived Delivery fee 48.00 was billed ----
     write_mailbox("usd_waiver", {
         "0001.eml": eml(
             "Ilaria Vestin", "ilaria.vestin@northaven.example", "odette.quill@quillmed.example",
@@ -343,3 +313,4 @@ def build() -> None:
 
 if __name__ == "__main__":
     sys.exit(build())
+
