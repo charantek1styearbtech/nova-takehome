@@ -14,4 +14,45 @@ The hand-verification math and its acceptance thresholds, the eval case designs 
 
 ## Prompt log
 
-Development happened inside one long agent session, so there is no separate exported log; the working record is the repo itself — git history, `evals/build_mailboxes.py` (which documents every generated mailbox), the `why:` line in each eval case, and `SOLUTION.md`. Representative prompts and exchanges, in order: parse the BRIEF and examples into a fact/check taxonomy; implement extraction with verbatim citations; implement each check against the practice mailbox until the grader read 99.5; diagnose why the exam's charges-advice layout failed to parse (line-sum audit); verify the India contract's term dates against clause text; hand off expected rebate math and ask for the code to match it, not the reverse; build eval mailboxes from first principles and score them; break the fuel recompute deliberately to prove the suite goes red. No API keys or secrets appear anywhere in this file or the repository.
+Verbatim prompts from the OpenCode session record (9–10 Oct 2026), in order. Trimmed only for secrets: the one message containing an endpoint and credential is redacted, greetings and duplicate sends are removed. Responses were the model's; every prompt below is mine.
+
+### Day 1 — scoping and data survey (9 Oct, 17:04–18:01)
+
+- "check the assignment pdf in the folder and explain what is the assignment"
+- "what i should build"
+- "plan the project"
+- "start build"
+- "https://github.com/gocomet-india/nova-takehome is this and the one we are building is same"
+- "clean the files just keep pdf"
+- "https://github.com/gocomet-india/nova-takehome clone this repo to this folder"
+- "understand the readme and gloassary and list the check points or feautures we need to have in this project"
+- "now let check what kind of test data is present what kind of invoice sources are there and are the formats same are those of multiple companies"
+
+That survey is what produced the multi-format design decision: one row regex per invoice layout instead of one "smart" parser.
+
+### Day 1 — architecture, my calls (9 Oct, 22:18–22:44)
+
+- "now lets think about how we take the input?"
+- "how do we plan to take the input sources and make them into universal format?"
+- "so we are going to build around orchestrator?"
+- "so we are building the only the extraction + unified memory about particular company?"
+- "so the analysis part where we need to verify 6 points"
+- "plan the whole project and start building if you have any questions ask me and give me summary how did we implement every feature like explain to an non coder"
+- "i have another openai compatible key of different model and hybrid and path A only after passing path A try for Path B"
+- "i will provide while testing now start building the project"
+- *(redacted: API endpoint and key)*
+
+The hybrid rule — deterministic Layer 1/2 pass first, Layer 3 only after, LLM strictly as fallback — is the line above. It stayed the design's spine: see DESIGN.md.
+
+### Day 2 — verification, hardening, write-up (10 Oct)
+
+- "is the test and exam are both passed?"
+- "print files structure" / "which we created"
+- "remove the cooments from code files and make it look like human written without effecting code"
+- "explain the working of the project"
+- "how are each layers excuted which algo used which modules used is there any ai invovlement and are there any structure the data stored or schema in each step"
+- "take one invoice from each format and show me how the whole thing works while explaining the entire process and technique along with intermediate outputs"
+- "more detailed answer"
+- "how do i submit"
+
+No API keys or secrets appear anywhere in this file or the repository. The machine's full session export is available on request, and the working record also lives in the repo itself: git history, `evals/build_mailboxes.py`, the `why:` line in each eval case, and `SOLUTION.md`.
